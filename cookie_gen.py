@@ -58,8 +58,10 @@ class Recipe:
         """TODO"""
 
     def __repr__(self):
-        s =
-
+        s = 'Recipe for ' + self.name + ':\n'
+        for i in self.ingredients_list:
+            s += '\t' + i.__repr() + '\n'
+        return s
 
 class Ingredient:
     def __init__(self, amount, name):
