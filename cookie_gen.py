@@ -19,10 +19,25 @@ class Recipe:
     num_of_recipes = 0
 
     def __init__(self, name, ingredients_list):
-        self.ingredients_list = ingredients_list
         self.name = name
         self.num_of_ingredients = len(ingredients_list)
         Recipe.num_of_recipes += 1
+        new_ingredients_list = []
+        for ingredient in ingredients_list:
+            new_ingredients_list.append(Ingredient(ingredient.amount, ingredient.name))
+        self.ingredients_list = new_ingredients_list
+
+    def reproduce_with(self, recipe):
+        """TODO"""
+    
+    def mutate(self, all_ingredients):
+        """TODO"""
+    
+    def normalize(self):
+        """TODO"""
+    
+    def __repr__(self):
+        s =
 
 
 class Ingredient:
@@ -34,4 +49,4 @@ class Ingredient:
         return f'{self.name}, {self.amount} g'
 
 class Converter:
-    
+
