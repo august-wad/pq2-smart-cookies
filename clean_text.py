@@ -4,6 +4,21 @@ from os.path import join, isfile
 
 def main():
     recipes = parse_recipe_files('recipes')
+
+    # iterate through recipe
+    for recipe_name in list(recipes.keys()):
+        ingredients = recipes[recipe_name]
+
+        # iterate through each ingredient in each recipe
+        for ingredient in ingredients:
+            if not ingredient["name"] or not ingredient["unit"] or not ingredient["amount"]:
+                print(
+                    "Ingredient found with something potentially missing in recipe for " + recipe_name + ":")
+                print(ingredient)
+                print()
+                continue
+
+    """CODE TO PRINT ALL RECIPES:
     # iterate through recipe
     for recipe_name in list(recipes.keys()):
         print("Recipe for " + recipe_name + ":")
@@ -12,6 +27,7 @@ def main():
         # iterate through each ingredient in each recipe
         for ingredient in ingredients:
             print(ingredient)
+    """
 
 
 def parse_recipe_files(dirname):
@@ -23,7 +39,7 @@ def parse_recipe_files(dirname):
     """
     recipes = {}
     # for filename in os.listdir(dirname):
-    for filename in os.listdir(dirname)[:10]:
+    for filename in os.listdir(dirname):
         file_path = join(dirname, filename)
         if isfile(file_path) and filename != ".DS_Store":
             with open(file_path, "r") as file:
@@ -66,8 +82,8 @@ def split_ingredient(ingredient_str):
         try:
             ingredient_dict["amount"] += float(ingredient_split[0])
         except ValueError:
-            print('could not parse:')
-            print(ingredient_split)
+            ingredient_dict["name"] = ' '.join(ingredient_split)
+            return ingredient_dict
 
         # mixed number with ugly fraction, e.g. 1 ½ tablespoons sugar
         if ingredient_split[1] in ugly_fractions:
@@ -77,11 +93,15 @@ def split_ingredient(ingredient_str):
 
         # unit like "1 apple" or "1 large egg"
         if len(ingredient_split) <= 2 or ingredient_split[1] == 'large':
-            ingredient_dict["amount"] = float(ingredient_split[0])
-            ingredient_dict["name"] = ' '.join(ingredient_split[1:])
-            if ingredient_dict["name"] == "egg" or ingredient_dict["name"] == "eggs":
-                ingredient_dict["amount"] = ingredient_dict["amount"] * 50
-                ingredient_dict["unit"] = "grams"
+            try:
+                ingredient_dict["amount"] = float(ingredient_split[0])
+                ingredient_dict["name"] = ' '.join(ingredient_split[1:])
+                if ingredient_dict["name"] == "egg" or ingredient_dict["name"] == "eggs":
+                    ingredient_dict["amount"] = ingredient_dict["amount"] * 50
+                    ingredient_dict["unit"] = "grams"
+
+            except ValueError:
+                ingredient_dict["name"] = ' '.join(ingredient_split[1:])
 
         else:
             ingredient_dict["unit"] = ingredient_split[1]
