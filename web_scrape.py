@@ -54,10 +54,6 @@ def make_recipe_file(url):
         file.write(recipe_file_text)
 
 
-def get_annoying_fraction(fraction):
-    return {'¼': 1/4, '½': .5, '¾': 3/4, '⅐': 1/7, '⅑': 1/9, '⅒': .1, '⅓': 1/3, '⅔': 2/3, '⅕': .2, '⅖': .4, '⅗': .6, '⅘': .8, '⅙': 1/6, '⅚': 5/6, '⅛': 1/8, '⅜': 3/8, '⅝': 5/8, '⅞': 7/8}.get(fraction[0]) or eval(fraction.replace('⁄', '/').replace('⅟', '1/'))
-
-
 def main():
     # get urls for allrecipe's ~24 categories
     cookie_type_urls = get_cookie_type_urls()
