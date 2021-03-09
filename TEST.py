@@ -18,15 +18,14 @@ def get_cookie_type_urls():
     return recipes
 
 
-def get_recipe_urls(cookie_type_url, number):
+def get_recipe_urls(cookie_type_url):
     recipe_urls = []
     html = requests.get(cookie_type_url).text
     soup = BeautifulSoup(html, 'lxml')
     recipe_cards = soup.find_all('div', class_='card__detailsContainer')
-
-    for i in range(number):
-        card = recipe_cards[i]
+    for card in recipe_cards:
         recipe_urls.append(card.a.get('href'))
+        # print(card.h3.text.strip())
     return recipe_urls
 
 
@@ -61,13 +60,14 @@ def get_annoying_fraction(fraction):
 def main():
     # get urls for allrecipe's ~24 categories
     cookie_type_urls = get_cookie_type_urls()
+
     # above urls link to ~12 actual recipes. For now, grab the first 5 and make files from contents.
     recipe_urls = []
     for url in cookie_type_urls:
-        recipe_urls += get_recipe_urls(url, 8)
+        recipe_urls += get_recipe_urls(url)
 
-    for recipe_url in list(set(recipe_urls)):
-        make_recipe_file(recipe_url)
+    for url in cookie_type_urls[:5]:
+        make_recipe_file(url)
 
 
 main()
