@@ -68,15 +68,6 @@ class Recipe:
                 ingredient.amount, ingredient.name))
         self.ingredients_list = new_ingredients_list
 
-    def reproduce_with(self, recipe):
-        """TODO"""
-
-    def mutate(self, all_ingredients):
-        """TODO"""
-
-    def normalize(self):
-        """TODO"""
-
     def __repr__(self):
         s = 'Recipe for ' + self.name + ':\n'
         for i in self.ingredients_list:
@@ -86,8 +77,8 @@ class Recipe:
 
 class Ingredient:
     def __init__(self, amount, name):
-        self.name
-        self.amount
+        self.name = name
+        self.amount = amount
 
     def __repr__(self):
         return f'{self.name}, {self.amount} g'
