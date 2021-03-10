@@ -1,8 +1,6 @@
 import random
-import os
-import os.path
-import join
-import isfile
+from os import *
+from os.path import isfile
 import enum
 import pint
 

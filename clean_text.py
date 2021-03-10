@@ -3,7 +3,7 @@ from os.path import join, isfile
 
 
 def get_recipe_dict():
-    recipes = parse_recipe_files('recipes')
+    return parse_recipe_files('recipes')
 
 
 def parse_recipe_files(dirname):
