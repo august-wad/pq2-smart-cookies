@@ -6,6 +6,10 @@ import isfile
 import enum
 import pint
 
+from clean_text import get_recipe_dict
+
+recipe_dict = get_recipe_dict()
+
 
 """
 Authors: Danny Little, Bruce Tang, August Wadlington

@@ -2,32 +2,8 @@ import os
 from os.path import join, isfile
 
 
-def main():
+def get_recipe_dict():
     recipes = parse_recipe_files('recipes')
-
-    # iterate through recipe
-    for recipe_name in list(recipes.keys()):
-        ingredients = recipes[recipe_name]
-
-        # iterate through each ingredient in each recipe
-        for ingredient in ingredients:
-            if not ingredient["name"] or not ingredient["unit"] or not ingredient["amount"]:
-                print(
-                    "Ingredient found with something potentially missing in recipe for " + recipe_name + ":")
-                print(ingredient)
-                print()
-                continue
-
-    """CODE TO PRINT ALL RECIPES:
-    # iterate through recipe
-    for recipe_name in list(recipes.keys()):
-        print("Recipe for " + recipe_name + ":")
-        ingredients = recipes[recipe_name]
-
-        # iterate through each ingredient in each recipe
-        for ingredient in ingredients:
-            print(ingredient)
-    """
 
 
 def parse_recipe_files(dirname):
@@ -113,6 +89,3 @@ def split_ingredient(ingredient_str):
 
 def get_annoying_fraction(fraction):
     return {'¼': 1/4, '½': .5, '¾': 3/4, '⅐': 1/7, '⅑': 1/9, '⅒': .1, '⅓': 1/3, '⅔': 2/3, '⅕': .2, '⅖': .4, '⅗': .6, '⅘': .8, '⅙': 1/6, '⅚': 5/6, '⅛': 1/8, '⅜': 3/8, '⅝': 5/8, '⅞': 7/8}.get(fraction)
-
-
-main()
