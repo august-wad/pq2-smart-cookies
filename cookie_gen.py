@@ -112,9 +112,9 @@ def cup_to_g(name, amount):
     return amount
 
 
-def tspoon_to_cup(self, amount):
+def tspoon_to_cup(amount):
     return amount * .0208
 
 
-def tbspoon_to_cup(self, amount):
+def tbspoon_to_cup(amount):
     return amount * .0625
