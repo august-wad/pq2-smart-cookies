@@ -21,20 +21,38 @@ class Population:
         recipes_list: a list of already instantiated recipe objects that will make up the initial population.
         """
         self.recipes_list = recipes_list
-        self.all_ingredients = set()
+        self.all_ingredients = []
+        self.all_ingredients_objects = {}
         for recipe in self.recipes_list:
             for ingredient in recipe.ingredients_list:
                 self.all_ingredients.add(ingredient.name)
 
-    def freq_ingredients(recipes_list):
+                if ingredient.name in self.all_ingredients_objects:
+                    self.all_ingredients_objects[ingredient.name].add(
+                        ingredient)
+                else:
+                    self.all_ingredients_objects.update(
+                        {ingredient.name: [ingredient]})
+
+    def freq_ingredients(self):
         freqency_map = {}
-        for recipe in recipes_list:
+        for recipe in self.recipes_list:
             for ingredient in recipe:
                 if ingredient.name in freqency_map:
                     freqency_map[ingredient.name] += 1
                 else:
                     freqency_map.update({ingredient.name: 1})
         return freqency_map
+
+    def generate(self, freqency_map):
+        self.all_ingredients.sort(
+            key=lambda ingredient: freqency_map.get(ingredient.name), reverse=True)
+        core = self.all_ingredients[:len(self.all_ingredients) * 0.6]
+        extra = list(set(self.all_ingredients) - set(core))
+
+        # categorize ingreidents into core and extra
+        # cutoff for the core ingredients is set to top 60% for now
+        # output a combination of core plus random extras
 
 
 class Recipe:
@@ -64,6 +82,7 @@ class Recipe:
         for i in self.ingredients_list:
             s += '\t' + i.__repr() + '\n'
         return s
+
 
 class Ingredient:
     def __init__(self, amount, name):
@@ -97,13 +116,14 @@ def cup_to_g(name, amount):
     elif(name == "salt"):
         amount = storage * 72
     elif(name == "baking powder"):
-        amount = storage* 60
-        
+        amount = storage * 60
+
     return amount
-    
+
+
 def tspoon_to_cup(self, amount):
-        return amount * .0208
-    
+    return amount * .0208
+
+
 def tbspoon_to_cup(self, amount):
-        return amount * .0625
-        
+    return amount * .0625
