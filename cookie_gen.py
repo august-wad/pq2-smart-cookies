@@ -10,7 +10,7 @@ import pint
 """
 Authors: Danny Little, Bruce Tang, August Wadlington
 CSCI 3725
-Last Edited: 2021-03-07
+Last Edited: 2021-03-09
 """
 
 
@@ -71,7 +71,7 @@ class Recipe:
     def __repr__(self):
         s = 'Recipe for ' + self.name + ':\n'
         for i in self.ingredients_list:
-            s += '\t' + i.__repr() + '\n'
+            s += '\t' + i.__repr__() + '\n'
         return s
 
 
