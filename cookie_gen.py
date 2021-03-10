@@ -4,6 +4,8 @@ import os.path
 import join
 import isfile
 import enum
+import pint
+
 
 """
 Authors: Danny Little, Bruce Tang, August Wadlington
@@ -72,4 +74,36 @@ class Ingredient:
         return f'{self.name}, {self.amount} g'
 
 
-class Converter:
+def cup_to_g(name, amount):
+    storage = amount / .25
+    if(name == "flour"):
+        amount = storage * 32
+    elif(name == "butter"):
+        amount = storage * 57
+    elif(name == "sugar"):
+        amount = storage * 50
+    elif(name == "brown sugar"):
+        amount = storage * 45
+    elif(name == "water"):
+        amount = storage * 60
+    elif(name == "cornstarch"):
+        amount = storage * 30
+    elif(name == "milk"):
+        amount = storage * 60
+    elif(name == "chocolate chips"):
+        amount = storage * 45
+    elif(name == "baking soda"):
+        amount = storage * 72
+    elif(name == "salt"):
+        amount = storage * 72
+    elif(name == "baking powder"):
+        amount = storage* 60
+        
+    return amount
+    
+def tspoon_to_cup(self, amount):
+        return amount * .0208
+    
+def tbspoon_to_cup(self, amount):
+        return amount * .0625
+        
