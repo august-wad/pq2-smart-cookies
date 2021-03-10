@@ -22,16 +22,16 @@ class Population:
         """
         self.recipes_list = recipes_list
         self.all_ingredients = []
-        self.all_ingredients_objects = {}
+        self.all_ingredient_objects = {}
         for recipe in self.recipes_list:
             for ingredient in recipe.ingredients_list:
                 self.all_ingredients.add(ingredient.name)
 
-                if ingredient.name in self.all_ingredients_objects:
-                    self.all_ingredients_objects[ingredient.name].add(
+                if ingredient.name in self.all_ingredient_objects:
+                    self.all_ingredient_objects[ingredient.name].add(
                         ingredient)
                 else:
-                    self.all_ingredients_objects.update(
+                    self.all_ingredient_objects.update(
                         {ingredient.name: [ingredient]})
 
     def freq_ingredients(self):
