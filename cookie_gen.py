@@ -86,11 +86,11 @@ class Ingredient:
 
 def cup_to_g(name, amount):
     storage = amount / .25
-    if (name == "flour"):
+    if name == "flour":
         amount = storage * 32
-    elif (name == "butter"):
+    elif name == "butter":
         amount = storage * 57
-    elif (name == "sugar"):
+    elif name == "sugar":
         amount = storage * 50
     elif (name == "brown sugar"):
         amount = storage * 45
