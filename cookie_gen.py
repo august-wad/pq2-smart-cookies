@@ -2,7 +2,6 @@ import random
 from os import *
 from os.path import isfile
 
-
 from clean_text import get_recipe_dict
 
 
