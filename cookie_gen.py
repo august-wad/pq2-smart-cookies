@@ -6,8 +6,6 @@ import pint
 
 from clean_text import get_recipe_dict
 
-recipe_dict = get_recipe_dict()
-
 
 """
 Authors: Danny Little, Bruce Tang, August Wadlington
@@ -120,3 +118,10 @@ def tspoon_to_cup(amount):
 
 def tbspoon_to_cup(amount):
     return amount * .0625
+
+
+def main():
+    recipe_dict = get_recipe_dict()
+
+
+main()
