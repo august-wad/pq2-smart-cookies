@@ -1,8 +1,7 @@
 import random
 from os import *
 from os.path import isfile
-import enum
-import pint
+
 
 from clean_text import get_recipe_dict
 
@@ -146,6 +145,12 @@ def tbspoon_to_cup(amount):
 
 def main():
     recipe_dict = get_recipe_dict()
+    i = 0
+    key_list = list(recipe_dict.keys())
+    while i < 5:
+        print(recipe_dict[key_list[i]])
+        i += 1
 
 
 main()
+
