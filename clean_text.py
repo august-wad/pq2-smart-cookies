@@ -1,6 +1,9 @@
 import os
-import pickle5 as pickle
 from os.path import join, isfile
+
+
+def get_recipe_dict():
+    return parse_recipe_files('recipes')
 
 
 def parse_recipe_files(dirname):
@@ -86,13 +89,3 @@ def split_ingredient(ingredient_str):
 
 def get_annoying_fraction(fraction):
     return {'¼': 1/4, '½': .5, '¾': 3/4, '⅐': 1/7, '⅑': 1/9, '⅒': .1, '⅓': 1/3, '⅔': 2/3, '⅕': .2, '⅖': .4, '⅗': .6, '⅘': .8, '⅙': 1/6, '⅚': 5/6, '⅛': 1/8, '⅜': 3/8, '⅝': 5/8, '⅞': 7/8}.get(fraction)
-
-
-def get_recipe_dict():
-    with open('filename.pickle', 'rb') as handle:
-        return pickle.load(handle)
-
-
-recipe_dict = parse_recipe_files('recipes')
-with open('filename.pickle', 'wb') as handle:
-    pickle.dump(recipe_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
