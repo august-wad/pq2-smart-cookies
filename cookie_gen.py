@@ -10,7 +10,7 @@ from clean_text import get_recipe_dict
 """
 Authors: Danny Little, Bruce Tang, August Wadlington
 CSCI 3725
-Last Edited: 2021-03-09
+Last Edited: 2021-03-10
 """
 
 
@@ -53,6 +53,30 @@ class Population:
         # categorize ingreidents into core and extra
         # cutoff for the core ingredients is set to top 60% for now
         # output a combination of core plus random extras
+
+        for ingredient_name in core:
+            ingredient_objects = self.all_ingredient_objects.get(
+                ingredient_name)
+            high = max(
+                ingredient.amount for ingredient in ingredient_objects)
+            low = min(
+                ingredient.amount for ingredient in ingredient_objects)
+            new_amount = random.uniform(low, high)
+            output_ingredient_list.append(
+                Ingredient(ingredient_name, new_amount))
+
+        i = 3
+        while i > 0:
+            extra_ingredient_name = random.choice(extra)
+            extra.remove(extra_ingredient_name)
+            ingredient_objects = self.all_ingredient_objects.get(
+                extra_ingredient_name)
+            extra_amount = random.choice(
+                ingredient.amount for ingredient in ingredient_objects)
+            output_ingredient_list.append(
+                Ingredient(extra_ingredient_name, extra_amount))
+
+        return output_ingredient_list
 
 
 class Recipe:
