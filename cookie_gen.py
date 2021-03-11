@@ -48,10 +48,7 @@ class Population:
             key=lambda ingredient: freqency_map.get(ingredient.name), reverse=True)
         core = self.all_ingredients[:len(self.all_ingredients) * 0.6]
         extra = list(set(self.all_ingredients) - set(core))
-
-        # categorize ingreidents into core and extra
-        # cutoff for the core ingredients is set to top 60% for now
-        # output a combination of core plus random extras
+        output_ingredient_list = []
 
         for ingredient_name in core:
             ingredient_objects = self.all_ingredient_objects.get(
@@ -104,7 +101,7 @@ class Ingredient:
         self.amount = amount
 
     def __repr__(self):
-        return f'{self.name}, {self.amount} g'
+        return f'{self.name}, {self.amount}'
 
 
 def cup_to_g(name, amount):
@@ -153,4 +150,3 @@ def main():
 
 
 main()
-
