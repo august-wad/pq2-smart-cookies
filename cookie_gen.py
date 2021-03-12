@@ -46,7 +46,7 @@ class Population:
         freqency_map = self.freq_ingredients()
         self.all_ingredients.sort(
             key=lambda ingredient: freqency_map.get(ingredient), reverse=True)
-        core = self.all_ingredients[:round(len(self.all_ingredients) * 0.6)]
+        core = self.all_ingredients[:round(len(self.all_ingredients) * 0.05)]
         extra = list(set(self.all_ingredients) - set(core))
         output_ingredient_list = []
 
@@ -61,15 +61,16 @@ class Population:
             output_ingredient_list.append(
                 Ingredient(ingredient_name, new_amount))
 
-        # i = 3
-        # while i > 0:
-        #     extra_ingredient_name = random.choice(extra)
-        #     extra.remove(extra_ingredient_name)
-        #     ingredient_objects = self.all_ingredient_objects.get(
-        #         extra_ingredient_name)
-        #     extra_amount = random.choice(ingredient_objects)
-        #     output_ingredient_list.append(
-        #         Ingredient(extra_ingredient_name, extra_amount.amount))
+        i = 3
+        while i > 0:
+            extra_ingredient_name = random.choice(extra)
+            extra.remove(extra_ingredient_name)
+            extra_objects = self.all_ingredient_objects.get(
+                extra_ingredient_name)
+            extra_amount = random.choice(extra_objects)
+            output_ingredient_list.append(
+                Ingredient(extra_ingredient_name, extra_amount.amount))
+            i -= 1
 
         return output_ingredient_list
 
@@ -86,6 +87,16 @@ class Recipe:
             new_ingredients_list.append(Ingredient(
                 ingredient.name, ingredient.amount))
         self.ingredients_list = new_ingredients_list
+
+    def normalize(self):
+        """This method finds the percentage off from 100 oz the recipe's sum of ingredients is,
+            then corrects to that amount by multiplying every ingredient amount by that ratio
+        """
+        total = sum(ingredients.amount for ingredients in self.ingredients_list)
+        scaling_factor = 1000 / total
+        for ingredient in self.ingredients_list:
+            ingredient.amount *= scaling_factor
+            ingredient.amount = round(ingredient.amount, 3)
 
     def __repr__(self):
         s = 'Recipe for ' + self.name + ':\n'
@@ -180,6 +191,7 @@ def main():
     output_recipe = p.generate()
     output_name = "Demo 1"
     recipe = Recipe(output_name, output_recipe)
+    recipe.normalize()
     print(recipe)
 
 
