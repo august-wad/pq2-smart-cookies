@@ -111,7 +111,7 @@ class Ingredient:
         self.amount = amount
 
     def __repr__(self):
-        return f'{self.name}, {self.amount}'
+        return f'{self.name}, {self.amount} grams'
 
 
 def cup_to_g(name, amount):
@@ -120,9 +120,9 @@ def cup_to_g(name, amount):
         amount = storage * 32
     elif name == "butter":
         amount = storage * 57
-    elif name == "white sugar":
+    elif name == "white sugar" or name == "confectioners' sugar":
         amount = storage * 50
-    elif name == "brown sugar":
+    elif name == "brown sugar" or name == "sugar":
         amount = storage * 45
     elif name == "icing sugar":
         amount = storage * 35
@@ -138,6 +138,8 @@ def cup_to_g(name, amount):
         amount = storage * 72
     elif name == "salt":
         amount = storage * 72
+    elif name == "shortening":
+        amount = storage * 47
     elif name == "baking powder":
         amount = storage * 60
     elif name == "all-purpose flour":
@@ -164,6 +166,10 @@ def translate(recipe_dict):
         parse_store = recipe_dict.get(key)
         ingredients_list = []
         for ingredient in parse_store:
+            if ingredient.get("name") == "butter, softened" or ingredient.get("name") == "unsalted butter, chilled":
+                ingredient.update({"name": "butter"})
+            if ingredient.get("name") == "egg" or ingredient.get("name") == "eggs":
+                ingredient.update({"name": "egg(s)"})
             if ingredient.get("unit") == "teaspoons" or ingredient.get("unit") == "teaspoon":
                 cup_from_tspoon = tspoon_to_cup(ingredient.get("amount"))
                 ingredient.update({"amount": cup_from_tspoon})
