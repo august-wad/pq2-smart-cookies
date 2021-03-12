@@ -22,10 +22,11 @@ class Population:
         self.all_ingredient_objects = {}
         for recipe in self.recipes_list:
             for ingredient in recipe.ingredients_list:
-                self.all_ingredients.add(ingredient.name)
+                if (ingredient.name not in self.all_ingredients):
+                    self.all_ingredients.append(ingredient.name)
 
                 if ingredient.name in self.all_ingredient_objects:
-                    self.all_ingredient_objects[ingredient.name].add(
+                    self.all_ingredient_objects[ingredient.name].append(
                         ingredient)
                 else:
                     self.all_ingredient_objects.update(
@@ -34,17 +35,18 @@ class Population:
     def freq_ingredients(self):
         freqency_map = {}
         for recipe in self.recipes_list:
-            for ingredient in recipe:
+            for ingredient in recipe.ingredients_list:
                 if ingredient.name in freqency_map:
                     freqency_map[ingredient.name] += 1
                 else:
                     freqency_map.update({ingredient.name: 1})
         return freqency_map
 
-    def generate(self, freqency_map):
+    def generate(self):
+        freqency_map = self.freq_ingredients()
         self.all_ingredients.sort(
-            key=lambda ingredient: freqency_map.get(ingredient.name), reverse=True)
-        core = self.all_ingredients[:len(self.all_ingredients) * 0.6]
+            key=lambda ingredient: freqency_map.get(ingredient), reverse=True)
+        core = self.all_ingredients[:round(len(self.all_ingredients) * 0.6)]
         extra = list(set(self.all_ingredients) - set(core))
         output_ingredient_list = []
 
@@ -59,16 +61,15 @@ class Population:
             output_ingredient_list.append(
                 Ingredient(ingredient_name, new_amount))
 
-        i = 3
-        while i > 0:
-            extra_ingredient_name = random.choice(extra)
-            extra.remove(extra_ingredient_name)
-            ingredient_objects = self.all_ingredient_objects.get(
-                extra_ingredient_name)
-            extra_amount = random.choice(
-                ingredient.amount for ingredient in ingredient_objects)
-            output_ingredient_list.append(
-                Ingredient(extra_ingredient_name, extra_amount))
+        # i = 3
+        # while i > 0:
+        #     extra_ingredient_name = random.choice(extra)
+        #     extra.remove(extra_ingredient_name)
+        #     ingredient_objects = self.all_ingredient_objects.get(
+        #         extra_ingredient_name)
+        #     extra_amount = random.choice(ingredient_objects)
+        #     output_ingredient_list.append(
+        #         Ingredient(extra_ingredient_name, extra_amount.amount))
 
         return output_ingredient_list
 
@@ -83,7 +84,7 @@ class Recipe:
         new_ingredients_list = []
         for ingredient in ingredients_list:
             new_ingredients_list.append(Ingredient(
-                ingredient.amount, ingredient.name))
+                ingredient.name, ingredient.amount))
         self.ingredients_list = new_ingredients_list
 
     def __repr__(self):
@@ -94,7 +95,7 @@ class Recipe:
 
 
 class Ingredient:
-    def __init__(self, amount, name):
+    def __init__(self, name, amount):
         self.name = name
         self.amount = amount
 
@@ -146,13 +147,11 @@ def tbspoon_to_cup(amount):
     return amount * .0625
 
 
-def main():
-    recipe_dict = get_recipe_dict()
-    i = 0
-    key_list = list(recipe_dict.keys())
+def translate(recipe_dict):
     recipe_list = []
-    for key in key_list:
+    for key in list(recipe_dict.keys()):
         parse_store = recipe_dict.get(key)
+        ingredients_list = []
         for ingredient in parse_store:
             if ingredient.get("unit") == "teaspoons" or ingredient.get("unit") == "teaspoon":
                 cup_from_tspoon = tspoon_to_cup(ingredient.get("amount"))
@@ -163,12 +162,25 @@ def main():
                 ingredient.update({"amount": cup_from_tbspoon})
                 ingredient.update({"unit": "cups"})
             if ingredient.get("unit") == "cup" or ingredient.get("unit") == "cups":
-                grams_from_cups = cup_to_g(ingredient.get("name"), ingredient.get("amount"))
+                grams_from_cups = cup_to_g(ingredient.get(
+                    "name"), ingredient.get("amount"))
                 ingredient.update({"amount": grams_from_cups})
                 ingredient.update({"unit": "grams"})
 
+            ingredients_list.append(Ingredient(
+                ingredient.get("name"), ingredient.get("amount")))
+        recipe_list.append(Recipe(key, ingredients_list))
+    return recipe_list
 
 
+def main():
+    recipe_dict = get_recipe_dict()
+    recipe_list = translate(recipe_dict)
+    p = Population(recipe_list)
+    output_recipe = p.generate()
+    output_name = "Demo 1"
+    recipe = Recipe(output_name, output_recipe)
+    print(recipe)
 
 
 main()
