@@ -36,24 +36,53 @@ def split_ingredient(ingredient_str):
     ingredient_str: string representing an ingredient from the text files of recipes.
     """
     ingredient_split = [part for part in ingredient_str.split(' ') if part]
-    ingredient_dict = {"name": '', "unit": None, "amount": 0}
-    try:
-        # parse amount
-        ingredient_dict["amount"] = float(ingredient_split[0])
+    if ingredient_split[1][0] == "(":
+        return parse_parenth_unit(ingredient_split)
+    elif len(ingredient_split) <= 2 or ingredient_split[1] == 'large':
+        return parse_no_unit(ingredient_split)
 
-        # if unit not given
-        if len(ingredient_split) <= 2 or ingredient_split[1] == 'large':
-            ingredient_dict["name"] = ' '.join(ingredient_split[1:])
-            if ingredient_dict["name"] == "egg" or ingredient_dict["name"] == "eggs":
-                ingredient_dict["amount"] = ingredient_dict["amount"] * 50
-                ingredient_dict["unit"] = "grams"
-        # unit and name given
-        else:
-            ingredient_dict["unit"] = ingredient_split[1]
-            ingredient_dict["name"] = ' '.join(ingredient_split[2:])
+    ingredient_dict = {"name": '', "unit": '', "amount": 0}
+    try:
+        ingredient_dict["amount"] = float(ingredient_split[0])
+        ingredient_dict["unit"] = ingredient_split[1]
+        ingredient_dict["name"] = ' '.join(ingredient_split[2:])
+
     except ValueError:
         print("could not parse amount and unit from: " +
               ' '.join(ingredient_split))
         ingredient_dict["name"] = ' '.join(ingredient_split)
+
+    return ingredient_dict
+
+
+def parse_no_unit(ingredient_split):
+    ingredient_dict = {"name": '', "unit": '', "amount": 0}
+    ingredient_dict["name"] = ' '.join(ingredient_split[1:])
+    try:
+        ingredient_dict["amount"] = float(ingredient_split[0])
+
+    except ValueError:
+        print("could not full parse: " + ' '.join(ingredient_split))
+
+    if "egg" in ingredient_dict["name"]:
+        ingredient_dict["name"] = "egg"
+        ingredient_dict["amount"] = ingredient_dict["amount"] * 50
+        ingredient_dict["unit"] = "grams"
+
+    return ingredient_dict
+
+
+def parse_parenth_unit(ingredient_split):
+    # like: 1 (18.25 ounce) box red velvet cake mix
+    ingredient_dict = {"name": '', "unit": '', "amount": 0}
+    ingredient_dict["amount"] = float(ingredient_split[1][1:])
+    i = 2
+    while ingredient_split[i][-1] != ")":
+        ingredient_dict["unit"] = ingredient_dict["unit"] + \
+            ingredient_split[i]
+        i += 1
+    ingredient_dict["unit"] = ingredient_dict["unit"] + \
+        ingredient_split[i]
+    ingredient_dict["name"] = ' '.join(ingredient_split[i+1:][:-1])
 
     return ingredient_dict
