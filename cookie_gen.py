@@ -108,24 +108,32 @@ def cup_to_g(name, amount):
         amount = storage * 32
     elif name == "butter":
         amount = storage * 57
-    elif name == "sugar":
+    elif name == "white sugar":
         amount = storage * 50
-    elif (name == "brown sugar"):
+    elif name == "brown sugar":
         amount = storage * 45
-    elif (name == "water"):
+    elif name == "icing sugar":
+        amount = storage * 35
+    elif name == "water":
         amount = storage * 60
-    elif (name == "cornstarch"):
+    elif name == "cornstarch":
         amount = storage * 30
-    elif (name == "milk"):
+    elif name == "milk":
         amount = storage * 60
-    elif (name == "chocolate chips"):
+    elif name == "chocolate chips":
         amount = storage * 45
-    elif (name == "baking soda"):
+    elif name == "baking soda":
         amount = storage * 72
-    elif (name == "salt"):
+    elif name == "salt":
         amount = storage * 72
-    elif (name == "baking powder"):
+    elif name == "baking powder":
         amount = storage * 60
+    elif name == "all-purpose flour":
+        amount = storage * 32
+    elif name == "vanilla extract" or name == "vanilla":
+        amount = storage * 60
+    else:
+        amount = storage * 25
 
     return amount
 
@@ -142,9 +150,25 @@ def main():
     recipe_dict = get_recipe_dict()
     i = 0
     key_list = list(recipe_dict.keys())
-    while i < 5:
-        print(recipe_dict[key_list[i]])
-        i += 1
+    recipe_list = []
+    for key in key_list:
+        parse_store = recipe_dict.get(key)
+        for ingredient in parse_store:
+            if ingredient.get("unit") == "teaspoons" or ingredient.get("unit") == "teaspoon":
+                cup_from_tspoon = tspoon_to_cup(ingredient.get("amount"))
+                ingredient.update({"amount": cup_from_tspoon})
+                ingredient.update({"unit": "cups"})
+            if ingredient.get("unit") == "tablespoon" or ingredient.get("unit") == "tablespoons":
+                cup_from_tbspoon = tbspoon_to_cup(ingredient.get("amount"))
+                ingredient.update({"amount": cup_from_tbspoon})
+                ingredient.update({"unit": "cups"})
+            if ingredient.get("unit") == "cup" or ingredient.get("unit") == "cups":
+                grams_from_cups = cup_to_g(ingredient.get("name"), ingredient.get("amount"))
+                ingredient.update({"amount": grams_from_cups})
+                ingredient.update({"unit": "grams"})
+
+
+
 
 
 main()
