@@ -47,11 +47,31 @@ def make_recipe_file(url):
     recipe_file_text = recipe_name + '\n'
 
     for ingredient in ingredients_raw:
-        recipe_file_text += ingredient.text.strip() + '\n'
+        recipe_file_text += clean_ingredient_text(ingredient.text)
+        # recipe_file_text += ingredient.text.strip() + '\n'
 
     with open('recipes/' + recipe_name + '.txt', 'w') as file:
         file.truncate(0)
         file.write(recipe_file_text)
+
+
+def clean_ingredient_text(ingredient_str):
+    ugly_fractions = {'¼', '½', '¾', '⅐', '⅑', '⅒', '⅓', '⅔',
+                      '⅕', '⅖', '⅗', '⅘', '⅙', '⅚', '⅛', '⅜', '⅝', '⅞'}
+
+    ing_stripped = ingredient_str.strip()
+    cleaned = ing_stripped.replace('\u2009', '') + '\n'
+    if cleaned[1] in ugly_fractions:
+        mixed_fraction = float(cleaned[0]) + get_annoying_fraction(cleaned[1])
+        # return str(mixed_fraction) + cleaned[2:]
+        cleaned = str(mixed_fraction) + cleaned[2:]
+    elif cleaned[0] in ugly_fractions:
+        cleaned = str(get_annoying_fraction(cleaned[0])) + cleaned[1:]
+    return cleaned
+
+
+def get_annoying_fraction(fraction):
+    return {'¼': 1/4, '½': .5, '¾': 3/4, '⅐': 1/7, '⅑': 1/9, '⅒': .1, '⅓': 1/3, '⅔': 2/3, '⅕': .2, '⅖': .4, '⅗': .6, '⅘': .8, '⅙': 1/6, '⅚': 5/6, '⅛': 1/8, '⅜': 3/8, '⅝': 5/8, '⅞': 7/8}.get(fraction)
 
 
 def main():

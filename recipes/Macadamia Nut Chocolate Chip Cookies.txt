@@ -1,11 +1,11 @@
 Macadamia Nut Chocolate Chip Cookies
-½ cup butter, softened
-⅓ cup packed dark brown sugar
-⅓ cup white sugar
+0.5 cup butter, softened
+0.3333333333333333 cup packed dark brown sugar
+0.3333333333333333 cup white sugar
 1  egg
 1 teaspoon vanilla extract
-1 ⅛ cups sifted all-purpose flour
-½ teaspoon baking soda
-½ teaspoon salt
+1.125 cups sifted all-purpose flour
+0.5 teaspoon baking soda
+0.5 teaspoon salt
 1 cup macadamia nuts, chopped
-1 ¼ cups semisweet chocolate chips
+1.25 cups semisweet chocolate chips

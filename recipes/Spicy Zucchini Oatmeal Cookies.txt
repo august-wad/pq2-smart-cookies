@@ -1,12 +1,12 @@
 Spicy Zucchini Oatmeal Cookies
-1 ¼ cups all-purpose flour
-½ teaspoon baking soda
-1 ½ teaspoons ground cinnamon
-¼ teaspoon ground cloves
-½ cup butter, softened
-⅔ cup packed brown sugar
+1.25 cups all-purpose flour
+0.5 teaspoon baking soda
+1.5 teaspoons ground cinnamon
+0.25 teaspoon ground cloves
+0.5 cup butter, softened
+0.6666666666666666 cup packed brown sugar
 1  egg
 1 teaspoon vanilla extract
 1 cup quick cooking oats
 1 cup shredded zucchini
-½ cup raisins
+0.5 cup raisins

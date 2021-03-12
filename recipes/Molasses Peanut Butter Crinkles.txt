@@ -1,12 +1,12 @@
 Molasses Peanut Butter Crinkles
 1 cup packed brown sugar
-½ cup peanut butter
-¼ cup butter, softened
-¼ cup molasses
+0.5 cup peanut butter
+0.25 cup butter, softened
+0.25 cup molasses
 1  egg
 2 cups all-purpose flour
 2 teaspoons baking soda
-½ teaspoon ground ginger
-½ teaspoon ground cloves
-½ teaspoon salt
-⅓ cup granulated sugar for decoration
+0.5 teaspoon ground ginger
+0.5 teaspoon ground cloves
+0.5 teaspoon salt
+0.3333333333333333 cup granulated sugar for decoration

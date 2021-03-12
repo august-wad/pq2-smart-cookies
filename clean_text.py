@@ -35,57 +35,25 @@ def split_ingredient(ingredient_str):
     parameters:
     ingredient_str: string representing an ingredient from the text files of recipes.
     """
-    ingredient_str = ingredient_str.replace('\u2009', ' ')
     ingredient_split = [part for part in ingredient_str.split(' ') if part]
     ingredient_dict = {"name": '', "unit": None, "amount": 0}
-    ugly_fractions = {'¼', '½', '¾', '⅐', '⅑', '⅒', '⅓', '⅔',
-                      '⅕', '⅖', '⅗', '⅘', '⅙', '⅚', '⅛', '⅜', '⅝', '⅞'}
+    try:
+        # parse amount
+        ingredient_dict["amount"] = float(ingredient_split[0])
 
-    # first part is ugly fraction
-    if ingredient_split[0] in ugly_fractions:
-        ingredient_dict["amount"] += get_annoying_fraction(ingredient_split[0])
-
-        # e.g. ½ egg? I guess?
-        if len(ingredient_split) <= 2:
-            ingredient_dict["name"] = ' '.join(ingredient_split[1:])
-
-        # e.g. ½ tablespoon sugar
-        else:
-            ingredient_dict["unit"] = ingredient_split[1]
-            ingredient_dict["name"] = ' '.join(ingredient_split[2:])
-
-    else:
-        try:
-            ingredient_dict["amount"] += float(ingredient_split[0])
-        except ValueError:
-            ingredient_dict["name"] = ' '.join(ingredient_split)
-            return ingredient_dict
-
-        # mixed number with ugly fraction, e.g. 1 ½ tablespoons sugar
-        if ingredient_split[1] in ugly_fractions:
-            ingredient_dict["amount"] += get_annoying_fraction(
-                ingredient_split[1])
-            ingredient_split.pop(1)
-
-        # unit like "1 apple" or "1 large egg"
+        # if unit not given
         if len(ingredient_split) <= 2 or ingredient_split[1] == 'large':
-            try:
-                ingredient_dict["amount"] = float(ingredient_split[0])
-                ingredient_dict["name"] = ' '.join(ingredient_split[1:])
-                if ingredient_dict["name"] == "egg" or ingredient_dict["name"] == "eggs":
-                    ingredient_dict["amount"] = ingredient_dict["amount"] * 50
-                    ingredient_dict["unit"] = "grams"
-
-            except ValueError:
-                ingredient_dict["name"] = ' '.join(ingredient_split[1:])
-
+            ingredient_dict["name"] = ' '.join(ingredient_split[1:])
+            if ingredient_dict["name"] == "egg" or ingredient_dict["name"] == "eggs":
+                ingredient_dict["amount"] = ingredient_dict["amount"] * 50
+                ingredient_dict["unit"] = "grams"
+        # unit and name given
         else:
             ingredient_dict["unit"] = ingredient_split[1]
             ingredient_dict["name"] = ' '.join(ingredient_split[2:])
+    except ValueError:
+        print("could not parse amount and unit from: " +
+              ' '.join(ingredient_split))
+        ingredient_dict["name"] = ' '.join(ingredient_split)
 
-    ingredient_dict["amount"] = round(ingredient_dict["amount"], 4)
     return ingredient_dict
-
-
-def get_annoying_fraction(fraction):
-    return {'¼': 1/4, '½': .5, '¾': 3/4, '⅐': 1/7, '⅑': 1/9, '⅒': .1, '⅓': 1/3, '⅔': 2/3, '⅕': .2, '⅖': .4, '⅗': .6, '⅘': .8, '⅙': 1/6, '⅚': 5/6, '⅛': 1/8, '⅜': 3/8, '⅝': 5/8, '⅞': 7/8}.get(fraction)

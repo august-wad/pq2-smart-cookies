@@ -2,7 +2,7 @@ Chocolate Pecan Sandies
 1 cup butter, room temperature
 4 tablespoons white sugar
 1 teaspoon vanilla extract
-1 ¾ cups sifted all-purpose flour
+1.75 cups sifted all-purpose flour
 1 cup ground pecans
-¼ cup unsweetened cocoa powder
-⅓ cup sifted confectioners' sugar
+0.25 cup unsweetened cocoa powder
+0.3333333333333333 cup sifted confectioners' sugar

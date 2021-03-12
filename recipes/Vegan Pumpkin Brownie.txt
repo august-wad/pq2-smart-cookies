@@ -1,6 +1,6 @@
 Vegan Pumpkin Brownie
-¾ cup pumpkin puree
-1 ½ tablespoons coconut oil
+0.75 cup pumpkin puree
+1.5 tablespoons coconut oil
 3 tablespoons orange juice
 1 pinch ground nutmeg
 1 pinch ground cinnamon
@@ -9,10 +9,10 @@ Vegan Pumpkin Brownie
 1 cup almond flour
 6 tablespoons white sugar
 3 tablespoons orange juice
-1 ½ tablespoons coconut oil
+1.5 tablespoons coconut oil
 1 tablespoon vanilla extract
-⅔ cup dark chocolate, melted
-⅓ cup chopped pecans
+0.6666666666666666 cup dark chocolate, melted
+0.3333333333333333 cup chopped pecans
 1 teaspoon baking powder
 1 pinch salt
 1 pinch ground black pepper

@@ -1,11 +1,11 @@
 Oatmeal Peanut Butter Bars
 1 cup peanut butter
-½ cup packed brown sugar
-½ cup corn syrup
-⅓ cup butter
+0.5 cup packed brown sugar
+0.5 cup corn syrup
+0.3333333333333333 cup butter
 2 teaspoons vanilla extract
-3 ⅓ cups rolled oats
-½ cup flaked coconut
-½ cup sunflower seeds
-½ cup raisins
-½ cup semisweet chocolate chips
+3.3333333333333335 cups rolled oats
+0.5 cup flaked coconut
+0.5 cup sunflower seeds
+0.5 cup raisins
+0.5 cup semisweet chocolate chips

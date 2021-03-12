@@ -1,12 +1,12 @@
 Amena's Triple Chocolate Chip Cookie
-½ cup unsalted butter
-½ cup white sugar
-¼ cup packed light brown sugar
+0.5 cup unsalted butter
+0.5 cup white sugar
+0.25 cup packed light brown sugar
 1  large egg
-½ teaspoon vanilla extract
-1 ⅛ cups all-purpose flour
-½ teaspoon salt
-½ teaspoon baking soda
-⅓ cup semi-sweet chocolate chips
-⅓ cup white chocolate chips
-⅓ cup milk chocolate chips
+0.5 teaspoon vanilla extract
+1.125 cups all-purpose flour
+0.5 teaspoon salt
+0.5 teaspoon baking soda
+0.3333333333333333 cup semi-sweet chocolate chips
+0.3333333333333333 cup white chocolate chips
+0.3333333333333333 cup milk chocolate chips

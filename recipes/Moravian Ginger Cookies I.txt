@@ -1,12 +1,12 @@
 Moravian Ginger Cookies I
 3 tablespoons shortening
 2 tablespoons brown sugar
-⅓ cup molasses
-1 ¼ cups all-purpose flour
-¼ teaspoon baking soda
-½ teaspoon salt
-¼ teaspoon ground cinnamon
-¼ teaspoon ground ginger
-¼ teaspoon ground cloves
+0.3333333333333333 cup molasses
+1.25 cups all-purpose flour
+0.25 teaspoon baking soda
+0.5 teaspoon salt
+0.25 teaspoon ground cinnamon
+0.25 teaspoon ground ginger
+0.25 teaspoon ground cloves
 1 pinch ground nutmeg
 1 dash ground allspice

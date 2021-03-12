@@ -1,9 +1,9 @@
 Caramel Shortbread Square
-⅔ cup butter, softened
-¼ cup white sugar
-1 ¼ cups all-purpose flour
-½ cup butter
-½ cup packed light brown sugar
+0.6666666666666666 cup butter, softened
+0.25 cup white sugar
+1.25 cups all-purpose flour
+0.5 cup butter
+0.5 cup packed light brown sugar
 2 tablespoons light corn syrup
-½ cup sweetened condensed milk
-1 ¼ cups milk chocolate chips
+0.5 cup sweetened condensed milk
+1.25 cups milk chocolate chips

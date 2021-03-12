@@ -1,12 +1,12 @@
 Ravioli Dolci (Sweet Ravioli)
 1 cup butter, softened
-⅔ cup white sugar
+0.6666666666666666 cup white sugar
 1  egg, beaten
-1 ½ teaspoons vanilla extract
-¼ teaspoon almond extract
+1.5 teaspoons vanilla extract
+0.25 teaspoon almond extract
 1 teaspoon grated lemon zest
-2 ½ cups all-purpose flour
-¼ teaspoon baking soda
-⅛ teaspoon salt
-½ cup cherry preserves
-½ cup confectioners' sugar for dusting
+2.5 cups all-purpose flour
+0.25 teaspoon baking soda
+0.125 teaspoon salt
+0.5 cup cherry preserves
+0.5 cup confectioners' sugar for dusting

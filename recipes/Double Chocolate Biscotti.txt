@@ -1,9 +1,9 @@
 Double Chocolate Biscotti
-½ cup butter, softened
-⅔ cup white sugar
-¼ cup unsweetened cocoa powder
+0.5 cup butter, softened
+0.6666666666666666 cup white sugar
+0.25 cup unsweetened cocoa powder
 2 teaspoons baking powder
 2  eggs
-1 ¾ cups all-purpose flour
+1.75 cups all-purpose flour
 4 (1 ounce) squares white chocolate, chopped
-¾ cup semisweet chocolate chips
+0.75 cup semisweet chocolate chips

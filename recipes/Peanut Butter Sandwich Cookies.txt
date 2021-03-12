@@ -7,8 +7,8 @@ Peanut Butter Sandwich Cookies
 3  eggs
 3 cups all-purpose flour
 2 teaspoons baking soda
-¼ teaspoon salt
-½ cup creamy peanut butter
+0.25 teaspoon salt
+0.5 cup creamy peanut butter
 3 cups confectioners' sugar
 1 teaspoon vanilla extract
 5 tablespoons milk

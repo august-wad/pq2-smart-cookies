@@ -1,8 +1,8 @@
 Babe Ruth Bars
 1 cup peanut butter
 1 cup white corn syrup
-½ cup packed brown sugar
-½ cup white sugar
+0.5 cup packed brown sugar
+0.5 cup white sugar
 6 cups cornflakes cereal
 1 cup semisweet chocolate chips
-⅔ cup peanuts
+0.6666666666666666 cup peanuts

@@ -1,10 +1,10 @@
 Date-Nut and Brown Sugar Bars
-⅔ cup unbleached all-purpose flour
-⅔ cup packed brown sugar
-¼ cup finely chopped walnuts
+0.6666666666666666 cup unbleached all-purpose flour
+0.6666666666666666 cup packed brown sugar
+0.25 cup finely chopped walnuts
 1 teaspoon ground cinnamon
-¼ teaspoon ground cardamom
-¼ teaspoon salt
-½ teaspoon baking powder
+0.25 teaspoon ground cardamom
+0.25 teaspoon salt
+0.5 teaspoon baking powder
 1 cup dates, pitted and chopped
 2  eggs, beaten

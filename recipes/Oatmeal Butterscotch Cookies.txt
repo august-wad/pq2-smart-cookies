@@ -1,12 +1,12 @@
 Oatmeal Butterscotch Cookies
-¾ cup butter, softened
-¾ cup white sugar
-¾ cup packed brown sugar
+0.75 cup butter, softened
+0.75 cup white sugar
+0.75 cup packed brown sugar
 2  eggs
 1 teaspoon vanilla extract
-1 ¼ cups all-purpose flour
+1.25 cups all-purpose flour
 1 teaspoon baking soda
-½ teaspoon ground cinnamon
-½ teaspoon salt
+0.5 teaspoon ground cinnamon
+0.5 teaspoon salt
 3 cups rolled oats
-1 ⅔ cups butterscotch chips
+1.6666666666666665 cups butterscotch chips

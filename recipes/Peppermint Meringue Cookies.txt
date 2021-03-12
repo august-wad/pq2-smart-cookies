@@ -1,6 +1,6 @@
 Peppermint Meringue Cookies
 2  egg whites
-⅛ teaspoon cider vinegar
-⅛ teaspoon salt
-⅓ cup white sugar
+0.125 teaspoon cider vinegar
+0.125 teaspoon salt
+0.3333333333333333 cup white sugar
 3  peppermint candy canes, crushed
