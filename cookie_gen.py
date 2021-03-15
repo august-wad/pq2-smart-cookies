@@ -88,6 +88,7 @@ class Recipe:
             new_ingredients_list.append(Ingredient(
                 ingredient.name, ingredient.amount))
         self.ingredients_list = new_ingredients_list
+        self.normalize()
 
     def normalize(self):
         """This method finds the percentage off from 100 oz the recipe's sum of ingredients is,
@@ -204,7 +205,6 @@ def main():
     output_recipe = p.generate()
     output_name = "Demo 1"
     recipe = Recipe(output_name, output_recipe)
-    recipe.normalize()
     print(recipe)
 
 
