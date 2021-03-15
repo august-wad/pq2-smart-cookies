@@ -46,7 +46,7 @@ class Population:
         freqency_map = self.freq_ingredients()
         self.all_ingredients.sort(
             key=lambda ingredient: freqency_map.get(ingredient), reverse=True)
-        core = self.all_ingredients[:round(len(self.all_ingredients) * 0.05)]
+        core = self.all_ingredients[:10]
         extra = list(set(self.all_ingredients) - set(core))
         output_ingredient_list = []
 
