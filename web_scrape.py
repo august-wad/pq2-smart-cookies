@@ -45,10 +45,11 @@ def make_recipe_file(url):
         return
 
     recipe_file_text = recipe_name + '\n'
+    recipe_rating = soup.find('span', class_='review-star-text')
+    recipe_file_text += recipe_rating.text.strip() + '\n'
 
     for ingredient in ingredients_raw:
         recipe_file_text += clean_ingredient_text(ingredient.text)
-        # recipe_file_text += ingredient.text.strip() + '\n'
 
     with open('recipes/' + recipe_name + '.txt', 'w') as file:
         file.truncate(0)
@@ -63,7 +64,6 @@ def clean_ingredient_text(ingredient_str):
     cleaned = ing_stripped.replace('\u2009', '') + '\n'
     if cleaned[1] in ugly_fractions:
         mixed_fraction = float(cleaned[0]) + get_annoying_fraction(cleaned[1])
-        # return str(mixed_fraction) + cleaned[2:]
         cleaned = str(mixed_fraction) + cleaned[2:]
     elif cleaned[0] in ugly_fractions:
         cleaned = str(get_annoying_fraction(cleaned[0])) + cleaned[1:]

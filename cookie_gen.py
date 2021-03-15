@@ -78,8 +78,9 @@ class Population:
 class Recipe:
     num_of_recipes = 0
 
-    def __init__(self, name, ingredients_list):
+    def __init__(self, name, ingredients_list, rating=None):
         self.name = name
+        self.rating = rating
         self.num_of_ingredients = len(ingredients_list)
         Recipe.num_of_recipes += 1
         new_ingredients_list = []
@@ -99,7 +100,7 @@ class Recipe:
             ingredient.amount = round(ingredient.amount, 3)
 
     def __repr__(self):
-        s = 'Recipe for ' + self.name + ':\n'
+        s = f'Recipe for {self.name} (rated {self.rating} stars):\n'
         for i in self.ingredients_list:
             s += '\t' + i.__repr__() + '\n'
         return s
@@ -165,7 +166,8 @@ def translate(recipe_dict):
     for key in list(recipe_dict.keys()):
         parse_store = recipe_dict.get(key)
         ingredients_list = []
-        for ingredient in parse_store:
+        rating = parse_store[0]
+        for ingredient in parse_store[1:]:
             if ingredient.get("name") == "butter, softened" or ingredient.get("name") == "unsalted butter, chilled":
                 ingredient.update({"name": "butter"})
             if ingredient.get("name") == "egg" or ingredient.get("name") == "eggs":
@@ -186,7 +188,10 @@ def translate(recipe_dict):
 
             ingredients_list.append(Ingredient(
                 ingredient.get("name"), ingredient.get("amount")))
-        recipe_list.append(Recipe(key, ingredients_list))
+        if rating > -1:
+            recipe_list.append(Recipe(key, ingredients_list, rating))
+        else:
+            recipe_list.append(Recipe(key, ingredients_list))
     return recipe_list
 
 
@@ -194,6 +199,8 @@ def main():
     recipe_dict = get_recipe_dict()
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
+    print(p.recipes_list[0])
+
     output_recipe = p.generate()
     output_name = "Demo 1"
     recipe = Recipe(output_name, output_recipe)
