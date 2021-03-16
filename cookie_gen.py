@@ -42,11 +42,11 @@ class Population:
                     freqency_map.update({ingredient.name: 1})
         return freqency_map
 
-    def generate(self):
+    def generate(self, core, extra):
         freqency_map = self.freq_ingredients()
         self.all_ingredients.sort(
             key=lambda ingredient: freqency_map.get(ingredient), reverse=True)
-        core = self.all_ingredients[:10]
+        core = self.all_ingredients[:core]
         extra = list(set(self.all_ingredients) - set(core))
         output_ingredient_list = []
 
@@ -61,7 +61,7 @@ class Population:
             output_ingredient_list.append(
                 Ingredient(ingredient_name, new_amount))
 
-        i = 3
+        i = extra
         while i > 0:
             extra_ingredient_name = random.choice(extra)
             extra.remove(extra_ingredient_name)
@@ -201,11 +201,16 @@ def main():
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
     print(p.recipes_list[0])
-
-    output_recipe = p.generate()
-    output_name = "Demo 1"
-    recipe = Recipe(output_name, output_recipe)
-    print(recipe)
+    core = 5
+    extra = 1
+    while core < 10:
+        while extra < 5:
+            output_recipe = p.generate(core, extra)
+            output_name = "Recipe " + extra
+            recipe = Recipe(output_name, output_recipe)
+            print(recipe)
+            extra += 1
+        core += 1
 
 
 main()
