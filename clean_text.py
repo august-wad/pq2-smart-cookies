@@ -90,6 +90,3 @@ def parse_parenth_unit(ingredient_split):
     ingredient_dict["name"] = ' '.join(ingredient_split[i+1:][:-1])
 
     return ingredient_dict
-
-
-get_recipe_dict()

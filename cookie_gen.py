@@ -5,6 +5,7 @@ Last Edited: 2021-03-17
 """
 
 import random
+from math import log10
 from os import *
 from os.path import isfile
 from clean_text import get_recipe_dict
@@ -41,7 +42,7 @@ class Population:
                     freqency_map.update({ingredient.name: 1})
         return freqency_map
 
-    def generate(self, num_core, num_extra):
+    def generate(self, num_core, num_extras):
         freqency_map = self.freq_ingredients()
         self.all_ingredients.sort(
             key=lambda ingredient: freqency_map.get(ingredient), reverse=True)
@@ -61,7 +62,7 @@ class Population:
             output_ingredient_list.append(
                 Ingredient(ingredient_name, new_amount))
 
-        i = num_extra
+        i = num_extras
         while i > 0:
             extra_ingredient_name = random.choice(extra)
             extra.remove(extra_ingredient_name)
@@ -72,17 +73,14 @@ class Population:
                 Ingredient(extra_ingredient_name, extra_amount.amount))
             i -= 1
 
-        return Recipe(f"Recipe {num_extra}", output_ingredient_list)
+        return GeneratedRecipe(f"New recipe", output_ingredient_list, num_core, num_extras)
 
 
 class Recipe:
-    num_of_recipes = 0
-
     def __init__(self, name, ingredients_list, rating=None):
         self.name = name
         self.rating = rating
         self.num_of_ingredients = len(ingredients_list)
-        Recipe.num_of_recipes += 1
         new_ingredients_list = []
         for ingredient in ingredients_list:
             new_ingredients_list.append(Ingredient(
@@ -101,7 +99,20 @@ class Recipe:
             ingredient.amount = round(ingredient.amount, 3)
 
     def __repr__(self):
-        s = f'Recipe for {self.name} (rated {self.rating} stars):\n'
+        s = f'Recipe for {self.name}:\n'
+        for i in self.ingredients_list:
+            s += '\t' + i.__repr__() + '\n'
+        return s
+
+
+class GeneratedRecipe(Recipe):
+    def __init__(self, name, ingredients_list, num_core, num_extras, rating=None):
+        super().__init__(name, ingredients_list, rating)
+        self.num_core = num_core
+        self.num_extras = num_extras
+
+    def __repr__(self):
+        s = f'(generated) Recipe for {self.name}'
         for i in self.ingredients_list:
             s += '\t' + i.__repr__() + '\n'
         return s
@@ -114,6 +125,31 @@ class Ingredient:
 
     def __repr__(self):
         return f'{self.name}, {self.amount} grams'
+
+
+def recipe_tf_idf(recipe, compare_to):
+    """
+    Returns a score from 0-1 saying, on average, how much each ingredient is unique to this recipe relative to other recipes.
+    Args:
+        recipe (Recipe): the recipe object to score
+        compare_to (list[Recipe]): the other recipes to compare against
+    """
+    tf_idf_list = []
+    for ingredient in recipe.ingredients_list[-recipe.num_extras:]:
+        tf = ingredient.amount / (len(recipe.ingredients_list) * 20)
+
+        # idf = log(len(compare_to) / total occurrences (OR amount) in compare_to)
+        total_occurrences = 0
+        for other_recipe in compare_to:
+            for other_ingredient in other_recipe.ingredients_list:
+                if other_ingredient.name == ingredient.name:
+                    total_occurrences += 1
+
+        idf = log10(len(compare_to) / total_occurrences)
+        tf_idf = tf * idf
+        tf_idf_list.append(tf_idf)
+
+    return sum(tf_idf_list) / len(tf_idf_list)
 
 
 def cup_to_g(name, amount):
@@ -201,7 +237,11 @@ def main():
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
 
-    print(p.generate(8, 2))
+    num_core = 8
+    num_extras = 5
+    for i in range(1, 10):
+        new = p.generate(num_core, num_extras)
+        print(recipe_tf_idf(new, p.recipes_list))
 
 
 main()
