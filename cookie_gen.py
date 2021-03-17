@@ -49,6 +49,7 @@ class Population:
         extra = list(set(self.all_ingredients) - set(core))
         output_ingredient_list = []
 
+        # add core ingredients
         for ingredient_name in core:
             ingredient_objects = self.all_ingredient_objects.get(
                 ingredient_name)
@@ -60,7 +61,7 @@ class Population:
             output_ingredient_list.append(
                 Ingredient(ingredient_name, new_amount))
 
-        i = extra
+        i = len(extra)
         while i > 0:
             extra_ingredient_name = random.choice(extra)
             extra.remove(extra_ingredient_name)
@@ -71,7 +72,7 @@ class Population:
                 Ingredient(extra_ingredient_name, extra_amount.amount))
             i -= 1
 
-        return output_ingredient_list
+        return Recipe(f"Recipe {extra}", output_ingredient_list)
 
 
 class Recipe:
@@ -199,17 +200,15 @@ def main():
     recipe_dict = get_recipe_dict()
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
-    print(p.recipes_list[0])
-    core = 5
-    extra = 1
-    while core < 10:
-        while extra < 5:
-            output_recipe = p.generate(core, extra)
-            output_name = "Recipe " + extra
-            recipe = Recipe(output_name, output_recipe)
-            print(recipe)
-            extra += 1
-        core += 1
+    # core = 5
+    # extra = 1
+    # while core < 10:
+    #     while extra < 5:
+    #         recipe = p.generate(core, extra)
+    #         print(recipe)
+    #         extra += 1
+    #     core += 1
+    print(p.generate(5, 2))
 
 
 main()
