@@ -238,6 +238,9 @@ def translate(recipe_dict):
     return recipe_list
 
 
+def core_fitness(gen_recipe, recipe_list):
+
+
 def main():
     recipe_dict = get_recipe_dict()
     recipe_list = translate(recipe_dict)
