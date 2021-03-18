@@ -48,15 +48,16 @@ class Population:
         self.all_ingredients.sort(
             key=lambda ingredient: freqency_map.get(ingredient), reverse=True)
         core = self.all_ingredients[:num_core]
-        core_ingredients = set()
 
         # select 10 core ingredients probabilistically from top num_core ingredients
-        recipe_freq = [freqency_map.get(recipe)
-                       for recipe in self.recipes_list]
-        while len(core_ingredients) < Recipe.NUM_CORE:
-            ingredient = random.choices(core, weights=recipe_freq)
-            while ingredient in core_ingredients:
-                ingredient = random.choices(core, weights=recipe_freq)
+        ingre_freq = [freqency_map.get(ingre)
+                      for ingre in self.all_ingredients][:num_core]
+        while len(output_ingredient_list) < Recipe.NUM_CORE:
+            ingredient = random.choices(core, weights=ingre_freq)[0]
+            core.remove(ingredient)
+            ingre_freq = [freqency_map.get(ingre)
+                          for ingre in core]
+
             ingredient_objects = self.all_ingredient_objects.get(ingredient)
             high = max(
                 i.amount for i in ingredient_objects)
@@ -67,7 +68,7 @@ class Population:
                 Ingredient(ingredient, new_amount))
 
         # and the rest is the extra pool
-        extra = list(set(self.all_ingredients) - core_ingredients)
+        extra = list(set(self.all_ingredients) - set(core))
         i = num_extras
         while i > 0:
             extra_ingredient_name = random.choice(extra)
@@ -139,6 +140,30 @@ class Ingredient:
 
     def __repr__(self):
         return f'{self.name}, {self.amount} grams'
+
+
+def core_fitness(recipe_gen, recipe_dict):
+    """
+    Returns a score from 0-1 of how close the amount of core ingredient selected is to the amount these
+    same ingredients are used in the original recipes
+    Args:
+        recipe_gen (Recipe): the recipe the system generated
+        recipe_dict ([string: list(recipe)]): the recipes parsed to compare with
+    """
+    score = 0
+    for ingredient in recipe_gen.core_ingredients:
+        ingredient_name = ingredient.name
+        ingredient_object_list = recipe_dict.get(ingredient_name)
+        sum = 0
+        for object in ingredient_object_list:
+            sum += object.amount
+        averge_amount = sum / len(ingredient_object_list)
+        fitness = (averge_amount - ingredient.amount) / averge_amount
+        if fitness < 0:
+            fitness *= -1
+        score += fitness
+
+    return score / Recipe.NUM_CORE
 
 
 def recipe_tf_idf(recipe, compare_to):
@@ -246,20 +271,16 @@ def translate(recipe_dict):
     return recipe_list
 
 
-def core_fitness(gen_recipe, recipe_list):
-    pass
-
-
 def main():
     recipe_dict = get_recipe_dict()
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
 
-    num_core = 8
+    num_core = 20
     num_extras = 5
     for i in range(1, 10):
         new = p.generate(num_core, num_extras)
-        print(recipe_tf_idf(new, p.recipes_list))
+        print(core_fitness(new, p.all_ingredient_objects))
 
 
 main()
