@@ -50,9 +50,12 @@ class Population:
         core = self.all_ingredients[:num_core]
 
         # select 10 core ingredients probabilistically from top num_core ingredients
+        # unless num_core is less than 10, in which case just pick the top core_num ingredients
         ingre_freq = [freqency_map.get(ingre)
                       for ingre in self.all_ingredients][:num_core]
         while len(output_ingredient_list) < Recipe.NUM_CORE:
+            if (len(output_ingredient_list) == num_core):
+                break
             ingredient = random.choices(core, weights=ingre_freq)[0]
             core.remove(ingredient)
             ingre_freq = [freqency_map.get(ingre)
@@ -276,7 +279,7 @@ def main():
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
 
-    num_core = 20
+    num_core = 10
     num_extras = 5
     for i in range(1, 10):
         new = p.generate(num_core, num_extras)
