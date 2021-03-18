@@ -44,24 +44,30 @@ class Population:
 
     def generate(self, num_core, num_extras):
         freqency_map = self.freq_ingredients()
+        output_ingredient_list = []
         self.all_ingredients.sort(
             key=lambda ingredient: freqency_map.get(ingredient), reverse=True)
         core = self.all_ingredients[:num_core]
-        extra = list(set(self.all_ingredients) - set(core))
-        output_ingredient_list = []
+        core_ingredients = set()
 
-        # add core ingredients
-        for ingredient_name in core:
-            ingredient_objects = self.all_ingredient_objects.get(
-                ingredient_name)
+        # select 10 core ingredients probabilistically from top num_core ingredients
+        recipe_freq = [freqency_map.get(recipe)
+                       for recipe in self.recipes_list]
+        while len(core_ingredients) < 10:
+            ingredient = random.choices(core, weights=recipe_freq)
+            while ingredient in core_ingredients:
+                ingredient = random.choices(core, weights=recipe_freq)
+            ingredient_objects = self.all_ingredient_objects.get(ingredient)
             high = max(
-                ingredient.amount for ingredient in ingredient_objects)
+                i.amount for i in ingredient_objects)
             low = min(
-                ingredient.amount for ingredient in ingredient_objects)
+                i.amount for i in ingredient_objects)
             new_amount = random.uniform(low, high)
             output_ingredient_list.append(
-                Ingredient(ingredient_name, new_amount))
+                Ingredient(ingredient, new_amount))
 
+        # and the rest is the extra pool
+        extra = list(set(self.all_ingredients) - core_ingredients)
         i = num_extras
         while i > 0:
             extra_ingredient_name = random.choice(extra)
