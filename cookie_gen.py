@@ -43,6 +43,15 @@ class Population:
         return freqency_map
 
     def generate(self, num_core, num_extras):
+        """Generate a recipe from picking certain number of core and extra ingredients by number of 
+        frequencies they have shown up in aspiring recipes. 
+            Args:
+                num_core: number of core ingredients to choose from; it's set to 10 by default,
+                when num_core is greater ten, the function generate ten out of num_core by probabilities,
+                and when num_core is less than ten the function selects num_core core ingredients
+                num_extras: number of extra ingredients desired. Selected from the ingreidents left
+                after core ingredients have been selected.
+        """
         freqency_map = self.freq_ingredients()
         output_ingredient_list = []
         self.all_ingredients.sort(
