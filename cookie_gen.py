@@ -53,7 +53,7 @@ class Population:
         # select 10 core ingredients probabilistically from top num_core ingredients
         recipe_freq = [freqency_map.get(recipe)
                        for recipe in self.recipes_list]
-        while len(core_ingredients) < 10:
+        while len(core_ingredients) < Recipe.NUM_CORE:
             ingredient = random.choices(core, weights=recipe_freq)
             while ingredient in core_ingredients:
                 ingredient = random.choices(core, weights=recipe_freq)
@@ -79,10 +79,12 @@ class Population:
                 Ingredient(extra_ingredient_name, extra_amount.amount))
             i -= 1
 
-        return GeneratedRecipe(f"New recipe", output_ingredient_list, num_core, num_extras)
+        return GeneratedRecipe(f"New recipe", output_ingredient_list)
 
 
 class Recipe:
+    NUM_CORE = 10
+
     def __init__(self, name, ingredients_list, rating=None):
         self.name = name
         self.rating = rating
@@ -112,10 +114,16 @@ class Recipe:
 
 
 class GeneratedRecipe(Recipe):
-    def __init__(self, name, ingredients_list, num_core, num_extras, rating=None):
+    def __init__(self, name, ingredients_list, rating=None):
         super().__init__(name, ingredients_list, rating)
-        self.num_core = num_core
-        self.num_extras = num_extras
+
+    @property
+    def core_ingredients(self):
+        return self.ingredients_list[:Recipe.NUM_CORE]
+
+    @property
+    def extra_ingredients(self):
+        return self.ingredients_list[Recipe.NUM_CORE:]
 
     def __repr__(self):
         s = f'(generated) Recipe for {self.name}'
@@ -239,6 +247,7 @@ def translate(recipe_dict):
 
 
 def core_fitness(gen_recipe, recipe_list):
+    pass
 
 
 def main():
