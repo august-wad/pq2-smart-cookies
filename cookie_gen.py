@@ -138,11 +138,61 @@ class GeneratedRecipe(Recipe):
     def extra_ingredients(self):
         return self.ingredients_list[Recipe.NUM_CORE:]
 
+    def core_fitness(self, recipe_dict):
+        """
+        Returns a score from 0-1 of how close the amount of core ingredient selected is to the amount these
+        same ingredients are used in the original recipes
+        Args:
+            recipe_gen (Recipe): the recipe the system generated
+            recipe_dict ([string: list(recipe)]): the recipes parsed to compare with
+        """
+        score = 0
+        for ingredient in self.core_ingredients:
+            ingredient_name = ingredient.name
+            ingredient_object_list = recipe_dict.get(ingredient_name)
+            sum = 0
+            for object in ingredient_object_list:
+                sum += object.amount
+            average_amount = sum / len(ingredient_object_list)
+            fitness = (average_amount - ingredient.amount) / average_amount
+            if fitness < 0:
+                fitness *= -1
+            score += fitness
+
+        return score / Recipe.NUM_CORE
+
+    def recipe_tf_idf(self, compare_to):
+        """
+        Returns a score from 0-1 saying, on average, how much each ingredient is unique to this recipe relative to other recipes.
+        Args:
+            compare_to (list[Recipe]): the other recipes to compare against
+        """
+        tf_idf_list = []
+        # for ingredient in recipe.ingredients_list[-recipe.num_extras:]:
+        for ingredient in self.extra_ingredients:
+            tf = ingredient.amount / (len(self.ingredients_list) * 20)
+
+            # idf = log(len(compare_to) / total occurrences (OR amount) in compare_to)
+            total_occurrences = 0
+            for other_recipe in compare_to:
+                for other_ingredient in other_recipe.ingredients_list:
+                    if other_ingredient.name == ingredient.name:
+                        total_occurrences += 1
+
+            idf = log10(len(compare_to) / total_occurrences)
+            tf_idf = tf * idf
+            tf_idf_list.append(tf_idf)
+
+        return sum(tf_idf_list) / len(tf_idf_list)
+
     def __repr__(self):
         s = f'(generated) Recipe for {self.name}:\n'
         for i in self.ingredients_list:
             s += '\t' + i.__repr__() + '\n'
         return s + '\n'
+
+    def fitness(self, compare_to, recipe_dict):
+        return (self.recipe_tf_idf(compare_to) + self.core_fitness(recipe_dict)) / 2
 
 
 class Ingredient:
@@ -152,56 +202,6 @@ class Ingredient:
 
     def __repr__(self):
         return f'{self.name}, {self.amount} grams'
-
-
-def core_fitness(recipe_gen, recipe_dict):
-    """
-    Returns a score from 0-1 of how close the amount of core ingredient selected is to the amount these
-    same ingredients are used in the original recipes
-    Args:
-        recipe_gen (Recipe): the recipe the system generated
-        recipe_dict ([string: list(recipe)]): the recipes parsed to compare with
-    """
-    score = 0
-    for ingredient in recipe_gen.core_ingredients:
-        ingredient_name = ingredient.name
-        ingredient_object_list = recipe_dict.get(ingredient_name)
-        sum = 0
-        for object in ingredient_object_list:
-            sum += object.amount
-        averge_amount = sum / len(ingredient_object_list)
-        fitness = (averge_amount - ingredient.amount) / averge_amount
-        if fitness < 0:
-            fitness *= -1
-        score += fitness
-
-    return score / Recipe.NUM_CORE
-
-
-def recipe_tf_idf(recipe, compare_to):
-    """
-    Returns a score from 0-1 saying, on average, how much each ingredient is unique to this recipe relative to other recipes.
-    Args:
-        recipe (Recipe): the recipe object to score
-        compare_to (list[Recipe]): the other recipes to compare against
-    """
-    tf_idf_list = []
-    # for ingredient in recipe.ingredients_list[-recipe.num_extras:]:
-    for ingredient in recipe.extra_ingredients:
-        tf = ingredient.amount / (len(recipe.ingredients_list) * 20)
-
-        # idf = log(len(compare_to) / total occurrences (OR amount) in compare_to)
-        total_occurrences = 0
-        for other_recipe in compare_to:
-            for other_ingredient in other_recipe.ingredients_list:
-                if other_ingredient.name == ingredient.name:
-                    total_occurrences += 1
-
-        idf = log10(len(compare_to) / total_occurrences)
-        tf_idf = tf * idf
-        tf_idf_list.append(tf_idf)
-
-    return sum(tf_idf_list) / len(tf_idf_list)
 
 
 def cup_to_g(name, amount):
@@ -288,17 +288,25 @@ def main():
     recipe_dict = get_recipe_dict()
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
+    for i in range(3):
+        new = p.generate(Recipe.NUM_CORE, 5)
+        print("Core:")
+        print(new.core_ingredients)
+        print("Extra:")
+        print(new.extra_ingredients)
+        print("Fitness:" + str(new.fitness(p.recipes_list, p.all_ingredient_objects)))
 
-    generated = []
-    for i in range(100):
-        num_extras = random.randint(4, 6)
-        new = p.generate(Recipe.NUM_CORE, num_extras)
-        fitness = core_fitness(new, p.all_ingredient_objects) + \
-            recipe_tf_idf(new, p.recipes_list) / 2
-        generated.append((new, fitness))
+    # # Get top 5 out of 100 generated
+    # generated = []
+    # for i in range(100):
+    #     num_extras = random.randint(4, 6)
+    #     new = p.generate(Recipe.NUM_CORE, num_extras)
+    #     fitness = core_fitness(new, p.all_ingredient_objects) + \
+    #         recipe_tf_idf(new, p.recipes_list) / 2
+    #     generated.append((new, fitness))
 
-    generated.sort(key=lambda x: x[1], reverse=True)
-    print(generated[:5])
+    # generated.sort(key=lambda x: x[1], reverse=True)
+    # print(generated[:5])
 
 
 main()
