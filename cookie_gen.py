@@ -123,7 +123,7 @@ class Recipe:
         s = f'Recipe for {self.name}:\n'
         for i in self.ingredients_list:
             s += '\t' + i.__repr__() + '\n'
-        return s
+        return s + '\n'
 
 
 class GeneratedRecipe(Recipe):
@@ -139,10 +139,10 @@ class GeneratedRecipe(Recipe):
         return self.ingredients_list[Recipe.NUM_CORE:]
 
     def __repr__(self):
-        s = f'(generated) Recipe for {self.name}'
+        s = f'(generated) Recipe for {self.name}:\n'
         for i in self.ingredients_list:
             s += '\t' + i.__repr__() + '\n'
-        return s
+        return s + '\n'
 
 
 class Ingredient:
@@ -186,7 +186,8 @@ def recipe_tf_idf(recipe, compare_to):
         compare_to (list[Recipe]): the other recipes to compare against
     """
     tf_idf_list = []
-    for ingredient in recipe.ingredients_list[-recipe.num_extras:]:
+    # for ingredient in recipe.ingredients_list[-recipe.num_extras:]:
+    for ingredient in recipe.extra_ingredients:
         tf = ingredient.amount / (len(recipe.ingredients_list) * 20)
 
         # idf = log(len(compare_to) / total occurrences (OR amount) in compare_to)
@@ -288,11 +289,16 @@ def main():
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
 
-    num_core = 10
-    num_extras = 5
-    for i in range(1, 10):
-        new = p.generate(num_core, num_extras)
-        print(core_fitness(new, p.all_ingredient_objects))
+    generated = []
+    for i in range(100):
+        num_extras = random.randint(4, 6)
+        new = p.generate(Recipe.NUM_CORE, num_extras)
+        fitness = core_fitness(new, p.all_ingredient_objects) + \
+            recipe_tf_idf(new, p.recipes_list) / 2
+        generated.append((new, fitness))
+
+    generated.sort(key=lambda x: x[1], reverse=True)
+    print(generated[:5])
 
 
 main()
