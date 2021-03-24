@@ -55,6 +55,8 @@ def split_ingredient(ingredient_str):
               ' '.join(ingredient_split))
         ingredient_dict["name"] = ' '.join(ingredient_split)
 
+    # trim extra words from things like: cream cheese, softened
+    ingredient_dict["name"] = ingredient_dict["name"].split(",")[0]
     return ingredient_dict
 
 

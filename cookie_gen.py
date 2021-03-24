@@ -9,6 +9,51 @@ from math import log10
 from os import *
 from os.path import isfile
 from clean_text import get_recipe_dict
+import numpy as np
+from itertools import combinations
+
+WORD_EMBED_VALS = np.load('ingred_word_emb.npy', allow_pickle=True).item()
+
+
+def ingredient_similarity(n1, n2):
+    """Returns the similarity between two ingredients based on our data."""
+    if " " not in n1 and " " not in n2:
+        return ingredient_vector(n1, n2)
+
+    biggest = -1
+    if " " not in n1:
+        for word in n2.split(" "):
+            vec = ingredient_vector(n1, word)
+            if vec:
+                biggest = max(biggest, vec)
+
+    elif " " not in n2:
+        for word in n1.split(" "):
+            vec = ingredient_vector(word, n2)
+            if vec:
+                biggest = max(biggest, vec)
+
+    else:
+        n1_words = n1.split(" ")
+        n2_words = n2.split(" ")
+        for n1 in n1_words:
+            for n2 in n2_words:
+                vec = ingredient_vector(n1, n2)
+                if vec:
+                    biggest = max(biggest, vec)
+
+    if biggest == -1:
+        return None
+    return biggest
+
+
+def ingredient_vector(n1, n2):
+    v1 = WORD_EMBED_VALS.get(n1, [])
+    v2 = WORD_EMBED_VALS.get(n2, [])
+
+    if len(v1) > 0 and len(v2) > 0:
+        return np.dot(v1, v2)
+    return None
 
 
 class Population:
@@ -43,8 +88,8 @@ class Population:
         return freqency_map
 
     def generate(self, num_core, num_extras):
-        """Generate a recipe from picking certain number of core and extra ingredients by number of 
-        frequencies they have shown up in aspiring recipes. 
+        """Generate a recipe from picking certain number of core and extra ingredients by number of
+        frequencies they have shown up in aspiring recipes.
             Args:
                 num_core: number of core ingredients to choose from; it's set to 10 by default,
                 when num_core is greater ten, the function generate ten out of num_core by probabilities,
@@ -94,6 +139,65 @@ class Population:
 
         return GeneratedRecipe(f"New recipe", output_ingredient_list)
 
+    def fitness(self, recipe, compare_to=None):
+        evaluations = [self.recipe_tf_idf(
+            recipe, compare_to), self.core_fitness(recipe)]
+        similarity = recipe.extras_similarity()
+        if similarity:
+            evaluations.append(similarity)
+
+        return sum(evaluations) / len(evaluations)
+
+    def recipe_tf_idf(self, recipe, compare_to=None):
+        """
+        Returns a score from 0-1 saying, on average, how much each ingredient is unique to this recipe relative to other recipes.
+        Args:
+            compare_to (list[Recipe]): the other recipes to compare against
+        """
+        if not compare_to:
+            compare_to = self.recipes_list
+        tf_idf_list = []
+        # for ingredient in recipe.ingredients_list[-recipe.num_extras:]:
+        for ingredient in recipe.extra_ingredients:
+            tf = ingredient.amount / (len(recipe.ingredients_list) * 20)
+
+            # idf = log(len(compare_to) / total occurrences (OR amount) in compare_to)
+            total_occurrences = 0
+            for other_recipe in compare_to:
+                for other_ingredient in other_recipe.ingredients_list:
+                    if other_ingredient.name == ingredient.name:
+                        total_occurrences += 1
+
+            idf = log10(len(compare_to) / total_occurrences)
+            tf_idf = tf * idf
+            tf_idf_list.append(tf_idf)
+
+        return sum(tf_idf_list) / len(tf_idf_list)
+
+    def core_fitness(self, recipe):
+        """
+        Returns a score from 0-1 of how close the amount of core ingredient selected is to the amount these
+        same ingredients are used in the original recipes
+        Args:
+            recipe_gen (Recipe): the recipe the system generated
+            recipe_dict ([string: list(recipe)]): the recipes parsed to compare with
+        """
+        score = 0
+        for ingredient in recipe.core_ingredients:
+            ingredient_name = ingredient.name
+            ingredient_object_list = self.all_ingredient_objects.get(
+                ingredient_name)
+            sum = 0
+            for object in ingredient_object_list:
+                sum += object.amount
+            average_amount = sum / len(ingredient_object_list)
+            fitness = (average_amount - ingredient.amount) / average_amount
+            if fitness < 0:
+                fitness *= -1
+            score += fitness
+
+        return score / Recipe.NUM_CORE
+
 
 class Recipe:
     NUM_CORE = 10
@@ -138,61 +242,21 @@ class GeneratedRecipe(Recipe):
     def extra_ingredients(self):
         return self.ingredients_list[Recipe.NUM_CORE:]
 
-    def core_fitness(self, recipe_dict):
-        """
-        Returns a score from 0-1 of how close the amount of core ingredient selected is to the amount these
-        same ingredients are used in the original recipes
-        Args:
-            recipe_gen (Recipe): the recipe the system generated
-            recipe_dict ([string: list(recipe)]): the recipes parsed to compare with
-        """
-        score = 0
-        for ingredient in self.core_ingredients:
-            ingredient_name = ingredient.name
-            ingredient_object_list = recipe_dict.get(ingredient_name)
-            sum = 0
-            for object in ingredient_object_list:
-                sum += object.amount
-            average_amount = sum / len(ingredient_object_list)
-            fitness = (average_amount - ingredient.amount) / average_amount
-            if fitness < 0:
-                fitness *= -1
-            score += fitness
-
-        return score / Recipe.NUM_CORE
-
-    def recipe_tf_idf(self, compare_to):
-        """
-        Returns a score from 0-1 saying, on average, how much each ingredient is unique to this recipe relative to other recipes.
-        Args:
-            compare_to (list[Recipe]): the other recipes to compare against
-        """
-        tf_idf_list = []
-        # for ingredient in recipe.ingredients_list[-recipe.num_extras:]:
-        for ingredient in self.extra_ingredients:
-            tf = ingredient.amount / (len(self.ingredients_list) * 20)
-
-            # idf = log(len(compare_to) / total occurrences (OR amount) in compare_to)
-            total_occurrences = 0
-            for other_recipe in compare_to:
-                for other_ingredient in other_recipe.ingredients_list:
-                    if other_ingredient.name == ingredient.name:
-                        total_occurrences += 1
-
-            idf = log10(len(compare_to) / total_occurrences)
-            tf_idf = tf * idf
-            tf_idf_list.append(tf_idf)
-
-        return sum(tf_idf_list) / len(tf_idf_list)
+    def extras_similarity(self):
+        similarities = []
+        for ing1, ing2 in list(combinations(self.extra_ingredients, 2)):
+            sim = ingredient_similarity(ing1.name, ing2.name)
+            if sim:
+                similarities.append(sim)
+        if similarities:
+            return sum(similarities) / len(similarities)
+        return None
 
     def __repr__(self):
         s = f'(generated) Recipe for {self.name}:\n'
         for i in self.ingredients_list:
             s += '\t' + i.__repr__() + '\n'
         return s + '\n'
-
-    def fitness(self, compare_to, recipe_dict):
-        return (self.recipe_tf_idf(compare_to) + self.core_fitness(recipe_dict)) / 2
 
 
 class Ingredient:
@@ -288,13 +352,13 @@ def main():
     recipe_dict = get_recipe_dict()
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)
-    for i in range(3):
-        new = p.generate(Recipe.NUM_CORE, 5)
-        print("Core:")
-        print(new.core_ingredients)
-        print("Extra:")
-        print(new.extra_ingredients)
-        print("Fitness:" + str(new.fitness(p.recipes_list, p.all_ingredient_objects)))
+
+    new = p.generate(Recipe.NUM_CORE, 5)
+    print("Core:")
+    print(new.core_ingredients)
+    print("Extra:")
+    print(new.extra_ingredients)
+    print(f'Fitness: {p.fitness(new)}')
 
     # # Get top 5 out of 100 generated
     # generated = []
