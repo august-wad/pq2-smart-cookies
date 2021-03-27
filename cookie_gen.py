@@ -78,6 +78,8 @@ class Population:
                         {ingredient.name: [ingredient]})
 
     def freq_ingredients(self):
+        """Store each ingredient name and its frequency in a dictionary. 
+        """
         freqency_map = {}
         for recipe in self.recipes_list:
             for ingredient in recipe.ingredients_list:
