@@ -1,7 +1,7 @@
 """
 Authors: Danny Little, Bruce Tang, August Wadlington
 CSCI 3725
-Last Edited: 2021-03-18
+Last Edited: 2021-03-30
 """
 
 import random
@@ -130,6 +130,7 @@ class Population:
         # and the rest is the extra pool
         extra = list(set(self.all_ingredients) - set(core))
         i = num_extras
+        recipe_name = random.choice(extra)
         while i > 0:
             extra_ingredient_name = random.choice(extra)
             extra.remove(extra_ingredient_name)
@@ -140,7 +141,7 @@ class Population:
                 Ingredient(extra_ingredient_name, extra_amount.amount))
             i -= 1
 
-        return GeneratedRecipe(f"New recipe", output_ingredient_list)
+        return GeneratedRecipe(recipe_name, output_ingredient_list)
 
     def fitness(self, recipe, compare_to=None):
         evaluations = [self.recipe_tf_idf(
