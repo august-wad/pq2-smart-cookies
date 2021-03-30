@@ -277,23 +277,20 @@ def main():
     p = Population(recipe_list)
 
     new = p.generate(Recipe.NUM_CORE, 5)
-    print("Core:")
-    print(new.core_ingredients)
-    print("Extra:")
-    print(new.extra_ingredients)
-    print(f'Fitness: {p.fitness(new)}')
 
     # # Get top 5 out of 100 generated
-    # generated = []
-    # for i in range(100):
-    #     num_extras = random.randint(4, 6)
-    #     new = p.generate(Recipe.NUM_CORE, num_extras)
-    #     fitness = core_fitness(new, p.all_ingredient_objects) + \
-    #         recipe_tf_idf(new, p.recipes_list) / 2
-    #     generated.append((new, fitness))
+    generated = []
+    for i in range(100):
+        num_extras = random.randint(4, 6)
+        new = p.generate(Recipe.NUM_CORE, num_extras)
+        fitness = p.fitness(new)
+        generated.append((new, fitness))
 
-    # generated.sort(key=lambda x: x[1], reverse=True)
-    # print(generated[:5])
+    generated.sort(key=lambda x: x[1], reverse=True)
+    top_five = generated[:5]
+    for recipe, fitness in top_five:
+        print(fitness)
+        print(recipe)
 
 
 main()
