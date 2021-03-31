@@ -17,7 +17,13 @@ WORD_EMBED_VALS = np.load('ingred_word_emb.npy', allow_pickle=True).item()
 
 
 def ingredient_similarity(n1, n2):
-    """Returns the similarity between two ingredients based on our data."""
+    """
+    Takes in two ingredients, and compares them using vectors generated from the
+    ingred_word_emb.npy file
+    Args:
+        n1 (String): a string representing an ingredient name
+        n2 (String): a string representing an ingredient name
+    """
     if " " not in n1 and " " not in n2:
         return ingredient_vector(n1, n2)
 
@@ -49,6 +55,13 @@ def ingredient_similarity(n1, n2):
 
 
 def ingredient_vector(n1, n2):
+    """
+    Returns the overlap of two ingredients after vectorizing them based on the flavor pairing
+    database included with the program.
+    Args:
+        n1 (String): a string representing the name of an ingredient
+        n2 (String): a string representing the name of an ingredient
+    """
     v1 = WORD_EMBED_VALS.get(n1, [])
     v2 = WORD_EMBED_VALS.get(n2, [])
 
@@ -61,7 +74,7 @@ class Population:
     def __init__(self, recipes_list):
         """Represents a population of recipes, from which the parents of each generation are chosen.
         parameters:
-        recipes_list: a list of already instantiated recipe objects that will make up the initial population.
+            recipes_list: a list of already instantiated recipe objects that will make up the initial population.
         """
         self.recipes_list = recipes_list
         self.all_ingredients = []
@@ -79,7 +92,8 @@ class Population:
                         {ingredient.name: [ingredient]})
 
     def freq_ingredients(self):
-        """Store each ingredient name and its frequency in a dictionary. 
+        """
+        Store each ingredient name and its frequency in a dictionary. 
         """
         freqency_map = {}
         for recipe in self.recipes_list:
@@ -146,6 +160,11 @@ class Population:
         return GeneratedRecipe(recipe_name, output_ingredient_list)
 
     def fitness(self, recipe, compare_to=None):
+        """
+        Returns a score from 0-1 saying, on average, how fit this cookie is against our chosen metrics (novelty and value)
+        Args:
+            compare_to (list[Recipe]): the other recipes to compare against
+        """
         evaluations = [self.recipe_tf_idf(
             recipe, compare_to), self.core_fitness(recipe)]
         similarity = recipe.extras_similarity()
@@ -209,6 +228,14 @@ class Recipe:
     NUM_CORE = 10
 
     def __init__(self, name, ingredients_list, rating=None):
+        """
+        This class represents a recipe object, containing a list of ingredients, name,
+        and potential rating based on whether it had a rating on the website it
+        was pulled from
+        Args:
+            name (String): a string representing the given name of the recipe
+            ingredients_list (list<Ingredient>): a list containing recipe's ingredients and their respective amounts
+        """
         self.name = name
         self.rating = rating
         self.num_of_ingredients = len(ingredients_list)
@@ -220,8 +247,9 @@ class Recipe:
         self.normalize()
 
     def normalize(self):
-        """This method finds the percentage off from 100 oz the recipe's sum of ingredients is,
-            then corrects to that amount by multiplying every ingredient amount by that ratio
+        """
+        This method finds the percentage off from 100 oz the recipe's sum of ingredients is,
+        then corrects to that amount by multiplying every ingredient amount by that ratio
         """
         total = sum(ingredients.amount for ingredients in self.ingredients_list)
         scaling_factor = 1000 / total
@@ -249,6 +277,10 @@ class GeneratedRecipe(Recipe):
         return self.ingredients_list[Recipe.NUM_CORE:]
 
     def extras_similarity(self):
+        """
+        Checks the extra ingredients in the parent recipe to test for how similar they are in the
+        flavor parings database ingred_word_emb.npy
+        """
         similarities = []
         for ing1, ing2 in list(combinations(self.extra_ingredients, 2)):
             sim = ingredient_similarity(ing1.name, ing2.name)

@@ -30,13 +30,14 @@ class Recipe:
             ingredient.amount = round(ingredient.amount, 3)
 
 
-"""
-This method will correct for some naming conventions in various recipes,
-as well as standardizing ingredients names for parsing and generation.
-This assumes that all butter is softened and doesn't make note of salted
-vs not (if relevant, may need to experiment)
-"""
+
 def translate(recipe_dict):
+    """
+    This method will correct for some naming conventions in various recipes,
+    as well as standardizing ingredients names for parsing and generation.
+    This assumes that all butter is softened and doesn't make note of salted
+    vs not (if relevant, may need to experiment)
+    """
     recipe_list = []
     for key in list(recipe_dict.keys()):
         parse_store = recipe_dict.get(key)
@@ -71,11 +72,12 @@ def translate(recipe_dict):
     return recipe_list
 
 
-"""
-Takes in an ingredient with measurement unit cups and converts
-it to the proper amount in grams
-"""
+
 def cup_to_g(name, amount):
+    """
+    Takes in an ingredient with measurement unit cups and converts
+    it to the proper amount in grams
+    """
     storage = amount / .25
     if name == "flour":
         amount = storage * 32
@@ -113,15 +115,17 @@ def cup_to_g(name, amount):
     return amount
 
 
-"""
-Converts a teaspoon amount to cups
-"""
+
 def tspoon_to_cup(amount):
+    """
+    Converts a teaspoon amount to cups
+    """
     return amount * .0208
 
 
-"""
-Converts a tablespoon amount to cups
-"""
+
 def tbspoon_to_cup(amount):
+    """
+    Converts a tablespoon amount to cups
+    """
     return amount * .0625
