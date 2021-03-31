@@ -2,6 +2,19 @@
 Authors: Danny Little, Bruce Tang, August Wadlington
 CSCI 3725
 Last Edited: 2021-03-30
+
+This file will used scraped cookie recipes in the directory ./recipes to 
+generate new cookie recipes. Broadly, this happens by creating a population
+object with recipe and ingredient objects. Then, to create a new recipe,
+A combination of "core" and "extra" ingredients are selected from this
+population, and their amounts may be altered before combining them in 
+a new recipe object. This new recipe can be evaluated in three metrics:
+
+1. tf-idf (how unique is this ingredient to this recipe?)
+2. core_fitness (do the amounts of core ingredients here match the average
+across our scraped recipes?)
+3. ingredient_similarity (do the extra ingredients pair particularly well or poorly?)
+
 """
 
 import random
@@ -162,7 +175,7 @@ class Population:
 
     def fitness(self, recipe, compare_to=None):
         """
-        Returns a score from 0-1 saying, on average, how fit this cookie is against our chosen metrics (novelty and value)
+        Returns a score from 0-1 (usually) saying, on average, how fit this cookie is against our chosen metrics (novelty and value)
         Args:
             compare_to (list[Recipe]): the other recipes to compare against
         """
@@ -176,7 +189,7 @@ class Population:
 
     def recipe_tf_idf(self, recipe, compare_to=None):
         """
-        Returns a score from 0-1 saying, on average, how much each ingredient is unique to this recipe relative to other recipes.
+        Returns a score from 0-1 (usually) describing, on average, how much each ingredient is unique to this recipe relative to other recipes.
         Args:
             compare_to (list[Recipe]): the other recipes to compare against
         """
@@ -317,11 +330,13 @@ def translate(recipe_dict):
             if ingredient.get("name") == "egg" or ingredient.get("name") == "eggs":
                 ingredient.update({"name": "egg(s)"})
             if ingredient.get("unit") == "teaspoons" or ingredient.get("unit") == "teaspoon":
-                cup_from_tspoon = u_convert.tspoon_to_cup(ingredient.get("amount"))
+                cup_from_tspoon = u_convert.tspoon_to_cup(
+                    ingredient.get("amount"))
                 ingredient.update({"amount": cup_from_tspoon})
                 ingredient.update({"unit": "cups"})
             if ingredient.get("unit") == "tablespoon" or ingredient.get("unit") == "tablespoons":
-                cup_from_tbspoon = u_convert.tbspoon_to_cup(ingredient.get("amount"))
+                cup_from_tbspoon = u_convert.tbspoon_to_cup(
+                    ingredient.get("amount"))
                 ingredient.update({"amount": cup_from_tbspoon})
                 ingredient.update({"unit": "cups"})
             if ingredient.get("unit") == "cup" or ingredient.get("unit") == "cups":
@@ -345,6 +360,12 @@ def translate(recipe_dict):
 
 class Ingredient:
     def __init__(self, name, amount):
+        """
+        This class represents one ingredient by its name and its amount in grams.
+        Args:
+            name (str): a string representing the name of the ingredient
+            amount (float): the weight in grams of this ingredient.
+        """
         self.name = name
         self.amount = amount
 
@@ -353,6 +374,9 @@ class Ingredient:
 
 
 def main():
+    """
+    instantiates a population, generates 100 recipes, and prints the 5 most "fit" ones.
+    """
     recipe_dict = get_recipe_dict()
     recipe_list = translate(recipe_dict)
     p = Population(recipe_list)

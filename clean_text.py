@@ -1,8 +1,22 @@
+"""
+Authors: Danny Little, Bruce Tang, August Wadlington
+CSCI 3725
+Last Edited: 2021-03-30
+
+This file does further parsing of the recipes stored in text files
+in the ./recipes directory so that they can be made into recipe
+and ingredient objects.
+"""
+
 import os
 from os.path import join, isfile
 
 
 def get_recipe_dict():
+    """
+    This function acts as a sort of "hook" so that the
+    parsing work done in this file can be taken advantage of. 
+    """
     return parse_recipe_files('recipes')
 
 
@@ -10,8 +24,8 @@ def parse_recipe_files(dirname):
     """A helper function to return a dictionary of 
     recipe information from text files representing each recipe.
 
-    parameters:
-    dirname: name of the directory where recipe text files are.
+        Args:
+        dirname (str): name of the directory where recipe text files are.
     """
     recipes = {}
     for filename in os.listdir(dirname):
@@ -34,9 +48,9 @@ def parse_recipe_files(dirname):
 
 def split_ingredient(ingredient_str):
     """A helper function to take in a string representing an ingredient,
-    and return a list in the format [amount, name]
-    parameters:
-    ingredient_str: string representing an ingredient from the text files of recipes.
+    and return a list in the form of a dictionary with keys: "amount", "name", "unit"
+        Args:
+        ingredient_str: string representing an ingredient from the text files of recipes.
     """
     ingredient_split = [part for part in ingredient_str.split(' ') if part]
     if ingredient_split[1][0] == "(":
@@ -61,6 +75,10 @@ def split_ingredient(ingredient_str):
 
 
 def parse_no_unit(ingredient_split):
+    """
+    A helper function to parse a split ingredient string without a unit, 
+    such as "4 eggs". 
+    """
     ingredient_dict = {"name": '', "unit": '', "amount": 0}
     ingredient_dict["name"] = ' '.join(ingredient_split[1:])
     try:
@@ -79,7 +97,11 @@ def parse_no_unit(ingredient_split):
 
 
 def parse_parenth_unit(ingredient_split):
-    # like: 1 (18.25 ounce) box red velvet cake mix
+    """
+    A helper function to parse a split ingredient with
+    another unit specified, such as:
+    "1 (18.25 ounce) box red velvet cake mix"
+    """
     ingredient_dict = {"name": '', "unit": '', "amount": 0}
     ingredient_dict["amount"] = float(ingredient_split[1][1:])
     i = 2
