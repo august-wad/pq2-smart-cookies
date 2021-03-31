@@ -1,0 +1,18 @@
+Example of a recipe with poor ingredient_similarity (-0.25), extras only:
+
+package chocolate cake cookie
+maple syrup, 52.668 grams
+finely chopped walnuts, 51.233 grams
+chopped almonds, 39.521 grams
+instant coffee granules, 2.762 grams
+fine salt, 0.609 grams
+ground black pepper, 1.174 grams
+
+
+Example of a recipe with better ingredient_similarity (0.99), extras only:
+
+chunky natural peanut butter cookie
+squares semisweet, 1.359 grams
+coconut flakes, 43.079 grams
+dark molasses, 44.067 grams
+sweetened flaked coconut, 299.778 grams

@@ -1,0 +1,29 @@
+Example of a recipe with poor core_fitness (0.332), core only:
+
+Recipe for almond extract cookie (system generated):
+all-purpose flour, 155.626 grams (avg: 313.98)
+baking powder, 5.475 grams (avg: 6.76)
+butter, 90.501 grams (avg: 198.79)
+white sugar, 202.775 grams (avg: 198.26)
+salt, 3.321 grams (avg: 3.31)
+baking soda, 6.92 grams (avg: 5.75)
+confectioners' sugar, 350.913 grams (avg: 267.27)
+vanilla extract, 1.423 grams (avg: 7.67)
+egg(s), 50.207 grams (avg: 109.31)
+ground cinnamon, 3.409 grams (avg: 2.89)
+
+
+Example of a recipe with better core_fitness (0.797), core only:
+
+Recipe for shredded zucchini cookie (system generated):
+salt, 5.319 grams (avg: 3.31)
+egg(s), 27.224 grams (avg: 109.31)
+all-purpose flour, 229.083 grams (avg: 313.98)
+confectioners' sugar, 368.447 grams (avg: 267.27)
+baking powder, 8.022 grams (avg: 6.77)
+white sugar, 146.79 grams (avg: 198.26)
+vanilla extract, 5.901 grams (avg: 7.67)
+baking soda, 12.941 grams (avg: 5.74)
+butter, 87.049 grams (avg: 198.79)
+ground cinnamon, 5.886 grams (avg: 2.89)
+
