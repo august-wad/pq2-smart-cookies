@@ -141,6 +141,8 @@ class Population:
                 Ingredient(extra_ingredient_name, extra_amount.amount))
             i -= 1
 
+        recipe_name += " cookie"
+
         return GeneratedRecipe(recipe_name, output_ingredient_list)
 
     def fitness(self, recipe, compare_to=None):
@@ -288,7 +290,7 @@ def main():
         generated.append((new, fitness))
 
     generated.sort(key=lambda x: x[1], reverse=True)
-    top_five = generated[:5]
+    top_five = generated[:5][::-1]
     for recipe, fitness in top_five:
         print(fitness)
         print(recipe)
