@@ -144,9 +144,10 @@ class Population:
         # and the rest is the extra pool
         extra = list(set(self.all_ingredients) - set(core))
         i = num_extras
-        recipe_name = random.choice(extra)
+        selected_extra_ingredients = []
         while i > 0:
             extra_ingredient_name = random.choice(extra)
+            selected_extra_ingredients.append(extra_ingredient_name)
             extra.remove(extra_ingredient_name)
             extra_objects = self.all_ingredient_objects.get(
                 extra_ingredient_name)
@@ -154,7 +155,7 @@ class Population:
             output_ingredient_list.append(
                 Ingredient(extra_ingredient_name, extra_amount.amount))
             i -= 1
-
+        recipe_name = random.choice(selected_extra_ingredients)
         recipe_name += " cookie"
 
         return GeneratedRecipe(recipe_name, output_ingredient_list)
