@@ -9,7 +9,7 @@ from math import log10
 from os import *
 from os.path import isfile
 from clean_text import get_recipe_dict
-from unit_conversion import translate
+import unit_conversion as u_convert
 import numpy as np
 from itertools import combinations
 
@@ -295,6 +295,51 @@ class GeneratedRecipe(Recipe):
         for i in self.ingredients_list:
             s += '\t' + i.__repr__() + '\n'
         return s + '\n'
+
+
+def translate(recipe_dict):
+    """
+    This method will correct for some naming conventions in various recipes,
+    as well as standardizing ingredients names for parsing and generation.
+    This assumes that all butter is softened and doesn't make note of salted
+    vs not (if relevant, may need to experiment)
+    """
+    recipe_list = []
+    for key in list(recipe_dict.keys()):
+        parse_store = recipe_dict.get(key)
+        ingredients_list = []
+        rating = parse_store[0]
+        for ingredient in parse_store[1:]:
+            """Not all butter is equal, but the generator treats it as if it were"""
+            if ingredient.get("name") == "butter, softened" or ingredient.get("name") == "unsalted butter, chilled":
+                ingredient.update({"name": "butter"})
+            if ingredient.get("name") == "egg" or ingredient.get("name") == "eggs":
+                ingredient.update({"name": "egg(s)"})
+            if ingredient.get("unit") == "teaspoons" or ingredient.get("unit") == "teaspoon":
+                cup_from_tspoon = u_convert.tspoon_to_cup(ingredient.get("amount"))
+                ingredient.update({"amount": cup_from_tspoon})
+                ingredient.update({"unit": "cups"})
+            if ingredient.get("unit") == "tablespoon" or ingredient.get("unit") == "tablespoons":
+                cup_from_tbspoon = u_convert.tbspoon_to_cup(ingredient.get("amount"))
+                ingredient.update({"amount": cup_from_tbspoon})
+                ingredient.update({"unit": "cups"})
+            if ingredient.get("unit") == "cup" or ingredient.get("unit") == "cups":
+                grams_from_cups = u_convert.cup_to_g(ingredient.get(
+                    "name"), ingredient.get("amount"))
+                ingredient.update({"amount": grams_from_cups})
+                ingredient.update({"unit": "grams"})
+            if ingredient.get("unit") == "ounce" or ingredient.get("unit") == "oz" or ingredient.get("unit") == "ounces":
+                g_from_oz = u_convert.oz_to_g(ingredient.get("amount"))
+                ingredient.update({"amount": g_from_oz})
+                ingredient.update({"unit": "grams"})
+
+            ingredients_list.append(Ingredient(
+                ingredient.get("name"), ingredient.get("amount")))
+        if rating > -1:
+            recipe_list.append(Recipe(key, ingredients_list, rating))
+        else:
+            recipe_list.append(Recipe(key, ingredients_list))
+    return recipe_list
 
 
 class Ingredient:
