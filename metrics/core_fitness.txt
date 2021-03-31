@@ -1,6 +1,5 @@
 Example of a recipe with poor core_fitness (0.332), core only:
 
-Recipe for almond extract cookie (system generated):
 all-purpose flour, 155.626 grams (avg: 313.98)
 baking powder, 5.475 grams (avg: 6.76)
 butter, 90.501 grams (avg: 198.79)
@@ -15,7 +14,6 @@ ground cinnamon, 3.409 grams (avg: 2.89)
 
 Example of a recipe with better core_fitness (0.797), core only:
 
-Recipe for shredded zucchini cookie (system generated):
 salt, 5.319 grams (avg: 3.31)
 egg(s), 27.224 grams (avg: 109.31)
 all-purpose flour, 229.083 grams (avg: 313.98)

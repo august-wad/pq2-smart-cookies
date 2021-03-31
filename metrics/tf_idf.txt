@@ -1,6 +1,5 @@
 Example of a recipe with poor tf_idf (0.0577), extras only:
 
-Recipe for hot water cookie (system generated):
 coarse sea salt, 0.0 grams (frequency: 1)
 ground almonds, 15.732 grams (frequency: 1)
 semisweet chocolate, 0.473 grams (frequency: 1)
@@ -9,7 +8,6 @@ raisins, 24.539 grams (frequency: 14)
 
 Example of a recipe with better tf_idf (0.588), extras only:
 
-Recipe for diced mixed candied fruit cookie (system generated):
 squares unsweetened chocolate, 0.654 grams (frequency: 1)
 pistachio nuts, 99.612 grams (frequency: 1)
 macadamia nuts, 77.687 grams (frequency: 1)
